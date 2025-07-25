@@ -237,9 +237,11 @@ const Header = ({ searchTerm, setSearchTerm }) => {
         padding: '0 2rem'
       }}>
         <div style={{
-          ...logoStyle,
+          display: 'flex',
+          alignItems: 'center',
           cursor: 'pointer',
           transition: 'transform 0.3s ease',
+          gap: '1rem',
           ':hover': { transform: 'scale(1.05)' }
         }} onClick={() => navigate('/')}>
           <img 
@@ -313,37 +315,6 @@ const Header = ({ searchTerm, setSearchTerm }) => {
           ...searchContainerStyle,
           gap: '1.5rem'
         }}>
-          <form onSubmit={handleSearch} style={{ position: 'relative' }}>
-            <input
-              type="text"
-              placeholder="Search podcasts..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                ...searchInputStyle,
-                padding: '0.75rem 1rem',
-                borderRadius: '25px',
-                border: '2px solid rgba(255, 255, 255, 0.2)',
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                color: 'white',
-                fontSize: '0.9rem',
-                width: '200px',
-                transition: 'all 0.3s ease',
-                '::placeholder': { color: 'rgba(255, 255, 255, 0.7)' }
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#ff6600';
-                e.target.style.boxShadow = '0 0 15px rgba(255, 102, 0, 0.3)';
-                e.target.style.background = 'rgba(255, 255, 255, 0.15)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                e.target.style.boxShadow = 'none';
-                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-              }}
-            />
-          </form>
           <Link
             to="/contact"
             style={{
@@ -561,8 +532,10 @@ const HomePage = () => {
   const statsBarStyle = {
     background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
     padding: '4rem 2rem',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'stretch',
     gap: '2rem',
     textAlign: 'center',
     position: 'relative',
@@ -570,14 +543,18 @@ const HomePage = () => {
   };
 
   const statItemStyle = {
-    padding: '2rem',
     background: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: '20px',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
     backdropFilter: 'blur(10px)',
+    borderRadius: '20px',
+    padding: '2rem',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     transition: 'all 0.3s ease',
-    cursor: 'pointer',
-    animation: 'fadeInUp 0.8s ease-out'
+    animation: 'fadeInUp 0.8s ease-out forwards',
+    opacity: 0,
+    transform: 'translateY(30px)',
+    minWidth: '200px',
+    flex: '1 1 200px',
+    maxWidth: '250px'
   };
 
   const statNumberStyle = {
@@ -760,7 +737,9 @@ const HomePage = () => {
         ))}
         <div style={{
           ...statItemStyle,
-          animationDelay: '0.8s'
+          animationDelay: '0.8s',
+          minWidth: '200px',
+          width: 'auto'
         }}>
           <div style={{
             fontSize: '2.5rem',
