@@ -75,16 +75,16 @@ const mockTeam = [
   {
     id: 1,
     name: "Pete Rodriguez",
-    role: "Founder & CEO",
+    role: "Founder & Owner",
     bio: "Former Marine turned podcast entrepreneur. Pete brings military discipline and authentic leadership to Podfinity's mission.",
     image: "/20250724_2113_Visionary%20Leader%20Portrait_simple_compose_01k0zj6pnhe9qah6aq6a0k9qbd.png",
     military: true
   },
   {
     id: 2,
-    name: "Sarah Johnson",
-    role: "Head of Production",
-    bio: "Award-winning audio engineer with 10+ years in broadcast media. Sarah ensures every podcast sounds crystal clear.",
+    name: "Marty Strong",
+    role: "CEO",
+    bio: "Experienced business leader with a passion for media innovation. Marty drives strategic growth and operational excellence at Podfinity.",
     image: "/20250724_2105_Serene%20Warriors'%20Retreat_simple_compose_01k0zhpf2venpt8hbvzsgvdrkw.png",
     military: false
   }
