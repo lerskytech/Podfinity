@@ -16,7 +16,6 @@ const globalStyles = `
   
   @keyframes fadeInUp {
     0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
   }
   
   @keyframes pulse {
@@ -25,18 +24,47 @@ const globalStyles = `
   }
   
   @keyframes slideInLeft {
-    0% { opacity: 0; transform: translateX(-50px); }
-    100% { opacity: 1; transform: translateX(0); }
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
   
   @keyframes slideInRight {
-    0% { opacity: 0; transform: translateX(50px); }
-    100% { opacity: 1; transform: translateX(0); }
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
   
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  @keyframes gradientText {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes titleFloat {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    25% { transform: translateY(-10px) scale(1.02); }
+    75% { transform: translateY(5px) scale(0.98); }
+  }
+  
+  @keyframes titleGlow {
+    0% { text-shadow: 0 0 20px rgba(255, 102, 0, 0.5); }
+    100% { text-shadow: 0 0 40px rgba(255, 102, 0, 0.8), 0 0 60px rgba(255, 102, 0, 0.4); }
   }
 `;
 
@@ -353,10 +381,11 @@ const Header = ({ searchTerm, setSearchTerm }) => {
 
 const Footer = () => {
   const footerStyle = {
-    backgroundColor: '#003366',
+    background: 'linear-gradient(135deg, #000811 0%, #003366 50%, #001122 100%)',
     color: 'white',
-    padding: '3rem 2rem 1rem',
-    textAlign: 'center'
+    padding: '4rem 2rem 2rem',
+    position: 'relative',
+    overflow: 'hidden'
   };
 
   const footerContentStyle = {
@@ -525,28 +554,6 @@ const HomePage = () => {
     fontSize: '1.8rem',
     marginBottom: '3rem',
     fontWeight: '300',
-    letterSpacing: '1px',
-    textShadow: '0 2px 4px rgba(0,0,0,0.7)',
-    animation: 'fadeInUp 1s ease-out 0.5s both'
-  };
-
-  const statsBarStyle = {
-    background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
-    padding: '4rem 2rem',
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'stretch',
-    gap: '2rem',
-    textAlign: 'center',
-    position: 'relative',
-    overflow: 'hidden'
-  };
-
-  const statItemStyle = {
-    background: 'rgba(255, 255, 255, 0.05)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: '20px',
     padding: '2rem',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     transition: 'all 0.3s ease',
@@ -646,12 +653,41 @@ const HomePage = () => {
         }}></div>
         
         <div style={heroContentStyle}>
-          <h1 style={heroTitleStyle}>YOUR VOICE, AMPLIFIED</h1>
-          <p style={heroSubtitleStyle}>
-            🎖️ BOCA RATON'S PREMIER PODCAST STUDIO 🎖️<br/>
-            <strong>Military Precision. Veteran Excellence. Uncompromising Quality.</strong><br/>
-            We Handle the Tech, You Share Your Story.
-          </p>
+          <div style={{
+            animation: 'titleGlow 3s ease-in-out infinite alternate'
+          }}>
+            <h1 style={{
+              ...heroTitleStyle,
+              fontSize: 'clamp(2.5rem, 8vw, 5rem)',
+              background: 'linear-gradient(135deg, #ffffff 0%, #ff6600 50%, #ffffff 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% 200%',
+              animation: 'gradientText 4s ease-in-out infinite, titleFloat 6s ease-in-out infinite'
+            }}>YOUR VOICE, AMPLIFIED</h1>
+          </div>
+          <div style={{
+            animation: 'fadeInUp 1.5s ease-out 0.8s both'
+          }}>
+            <p style={{
+              ...heroSubtitleStyle,
+              fontSize: 'clamp(1rem, 3vw, 1.4rem)',
+              lineHeight: '1.8',
+              maxWidth: '800px',
+              margin: '0 auto 3rem',
+              background: 'rgba(255, 255, 255, 0.95)',
+              color: '#003366',
+              padding: '2rem',
+              borderRadius: '20px',
+              backdropFilter: 'blur(10px)',
+              border: '2px solid rgba(255, 102, 0, 0.3)',
+              boxShadow: '0 15px 35px rgba(0, 0, 0, 0.2)'
+            }}>
+              🎖️ <strong>BOCA RATON'S PREMIER PODCAST STUDIO</strong> 🎖️<br/>
+              <span style={{ color: '#ff6600', fontWeight: '700' }}>Military Precision. Veteran Excellence. Uncompromising Quality.</span><br/>
+              <em>"We Handle the Tech, You Share Your Story."</em>
+            </p>
+          </div>
           <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link 
               to="/studios" 
@@ -694,7 +730,20 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section style={statsBarStyle}>
+      <section style={{
+        background: 'linear-gradient(135deg, #000811 0%, #001122 25%, #003366 50%, #001122 75%, #000811 100%)',
+        backgroundSize: '400% 400%',
+        animation: 'gradientShift 20s ease infinite',
+        padding: '5rem 2rem',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        gap: '2.5rem',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
         {[
           { number: '150+', label: 'SHOWS PRODUCED', icon: '🎧' },
           { number: '10+', label: 'YEARS EXPERIENCE', icon: '⚡' },
@@ -774,13 +823,104 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section style={sectionStyle}>
-        <h2 style={sectionTitleStyle}>Welcome to Podfinity</h2>
-        <p style={{ textAlign: 'center', fontSize: '1.2rem', marginBottom: '2rem', color: '#666' }}>
-          Located in the heart of Boca Raton at Royal Palm Place, Podfinity is where military discipline meets creative authenticity. 
-          Our vibrant South Florida setting, with its beautiful beaches and rich military heritage, provides the perfect backdrop 
-          for authentic conversations that resonate globally.
-        </p>
+      <section style={{
+        ...sectionStyle,
+        background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f1f3f4 100%)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          right: '0',
+          bottom: '0',
+          background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ff6600" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+          opacity: 0.3
+        }}></div>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <h2 style={{
+            ...sectionTitleStyle,
+            background: 'linear-gradient(135deg, #003366 0%, #ff6600 50%, #003366 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            marginBottom: '3rem',
+            animation: 'slideInLeft 1s ease-out'
+          }}>🎖️ WELCOME TO PODFINITY 🎖️</h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '3rem',
+            alignItems: 'center'
+          }}>
+            <div style={{
+              animation: 'slideInLeft 1.2s ease-out 0.3s both'
+            }}>
+              <img 
+                src="/20250724_2055_Podcasting%20at%20Sunset_simple_compose_01k0zh5x4j8qhpjqhvjdxs1hhz.png"
+                alt="Professional Podcast Studio"
+                style={{
+                  width: '100%',
+                  height: '300px',
+                  objectFit: 'cover',
+                  borderRadius: '20px',
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+                  border: '3px solid #ff6600',
+                  transition: 'transform 0.3s ease'
+                }}
+                onMouseEnter={(e) => e.target.style.transform = 'scale(1.05) rotate(1deg)'}
+                onMouseLeave={(e) => e.target.style.transform = 'scale(1) rotate(0deg)'}
+              />
+            </div>
+            <div style={{
+              animation: 'slideInRight 1.2s ease-out 0.5s both'
+            }}>
+              <h3 style={{
+                fontSize: '2rem',
+                color: '#003366',
+                marginBottom: '1.5rem',
+                fontWeight: '800'
+              }}>🌴 BOCA RATON'S PREMIER DESTINATION</h3>
+              <p style={{
+                fontSize: '1.2rem',
+                lineHeight: '1.8',
+                color: '#555',
+                marginBottom: '2rem',
+                textAlign: 'left'
+              }}>
+                Located in the heart of <strong>Boca Raton at Royal Palm Place</strong>, Podfinity is where 
+                <span style={{ color: '#ff6600', fontWeight: '700' }}>military discipline meets creative authenticity</span>. 
+                Our vibrant South Florida setting, with its beautiful beaches and rich military heritage, 
+                provides the perfect backdrop for authentic conversations that resonate globally.
+              </p>
+              <div style={{
+                display: 'flex',
+                gap: '1rem',
+                flexWrap: 'wrap'
+              }}>
+                <div style={{
+                  background: 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)',
+                  color: 'white',
+                  padding: '0.8rem 1.5rem',
+                  borderRadius: '25px',
+                  fontWeight: '700',
+                  fontSize: '0.9rem',
+                  boxShadow: '0 5px 15px rgba(255, 102, 0, 0.3)'
+                }}>🎖️ VETERAN OWNED</div>
+                <div style={{
+                  background: 'linear-gradient(135deg, #003366 0%, #004080 100%)',
+                  color: 'white',
+                  padding: '0.8rem 1.5rem',
+                  borderRadius: '25px',
+                  fontWeight: '700',
+                  fontSize: '0.9rem',
+                  boxShadow: '0 5px 15px rgba(0, 51, 102, 0.3)'
+                }}>🏆 PREMIUM QUALITY</div>
+              </div>
+            </div>
+          </div>
+        </div>
         
         <div style={{
           display: 'grid',
