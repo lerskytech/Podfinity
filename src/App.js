@@ -700,12 +700,12 @@ const HomePage = () => {
         background: 'linear-gradient(135deg, #000811 0%, #001122 25%, #003366 50%, #001122 75%, #000811 100%)',
         backgroundSize: '400% 400%',
         animation: 'gradientShift 20s ease infinite',
-        padding: '5rem 2rem',
+        padding: 'clamp(3rem, 5vw, 5rem) clamp(1rem, 3vw, 2rem)',
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'center',
         alignItems: 'stretch',
-        gap: '2.5rem',
+        gap: 'clamp(1.5rem, 3vw, 2.5rem)',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden'
@@ -754,9 +754,10 @@ const HomePage = () => {
         <div style={{
           ...statItemStyle,
           animationDelay: '0.8s',
-          minWidth: '220px',
-          width: '220px',
-          flexShrink: 0
+          minWidth: 'max-content',
+          width: 'auto',
+          flexShrink: 0,
+          padding: '2rem 2.5rem'
         }}>
           <div style={{
             fontSize: '2.5rem',
@@ -765,7 +766,7 @@ const HomePage = () => {
             animationDelay: '2s'
           }}>🤝</div>
           <div style={{
-            fontSize: '1.8rem',
+            fontSize: 'clamp(1.4rem, 3vw, 2rem)',
             fontWeight: '900',
             background: 'linear-gradient(135deg, #ff6600 0%, #ffaa66 100%)',
             WebkitBackgroundClip: 'text',
@@ -776,8 +777,9 @@ const HomePage = () => {
             lineHeight: '1.2',
             whiteSpace: 'nowrap',
             overflow: 'visible',
-            width: '100%',
-            textAlign: 'center'
+            width: 'max-content',
+            textAlign: 'center',
+            margin: '0 auto 0.5rem'
           }}>COMMUNITY</div>
           <div style={{
             ...statLabelStyle,
