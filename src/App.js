@@ -738,8 +738,9 @@ const HomePage = () => {
         <div style={{
           ...statItemStyle,
           animationDelay: '0.8s',
-          minWidth: '200px',
-          width: 'auto'
+          minWidth: '220px',
+          width: '220px',
+          flexShrink: 0
         }}>
           <div style={{
             fontSize: '2.5rem',
@@ -748,7 +749,7 @@ const HomePage = () => {
             animationDelay: '2s'
           }}>🤝</div>
           <div style={{
-            fontSize: '2rem',
+            fontSize: '1.8rem',
             fontWeight: '900',
             background: 'linear-gradient(135deg, #ff6600 0%, #ffaa66 100%)',
             WebkitBackgroundClip: 'text',
@@ -756,10 +757,11 @@ const HomePage = () => {
             marginBottom: '0.5rem',
             textShadow: '0 2px 4px rgba(0,0,0,0.3)',
             animation: 'pulse 2s ease-in-out infinite',
-            lineHeight: '1.1',
+            lineHeight: '1.2',
             whiteSpace: 'nowrap',
             overflow: 'visible',
-            minWidth: 'fit-content'
+            width: '100%',
+            textAlign: 'center'
           }}>COMMUNITY</div>
           <div style={{
             ...statLabelStyle,
