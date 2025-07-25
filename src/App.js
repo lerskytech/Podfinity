@@ -242,15 +242,18 @@ const Header = ({ searchTerm, setSearchTerm }) => {
           transition: 'transform 0.3s ease',
           ':hover': { transform: 'scale(1.05)' }
         }} onClick={() => navigate('/')}>
-          <div style={{
-            ...logoImageStyle,
-            background: 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)',
-            boxShadow: '0 4px 15px rgba(255, 102, 0, 0.4)',
-            border: '2px solid rgba(255, 255, 255, 0.2)',
-            fontSize: '1.4rem',
-            fontWeight: '900',
-            textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-          }}>⚡</div>
+          <img 
+            src="/20250724_2055_Podfinity%20Logo%20Innovation_simple_compose_01k0zh6qwrfbp9hr14dgqgs7ex.png"
+            alt="Podfinity Logo"
+            style={{
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              boxShadow: '0 4px 15px rgba(255, 102, 0, 0.4)',
+              border: '2px solid rgba(255, 255, 255, 0.2)'
+            }}
+          />
           <h1 style={{
             margin: 0,
             fontSize: '1.8rem',
@@ -559,8 +562,8 @@ const HomePage = () => {
     background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
     padding: '4rem 2rem',
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '3rem',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+    gap: '2rem',
     textAlign: 'center',
     position: 'relative',
     overflow: 'hidden'
@@ -755,9 +758,37 @@ const HomePage = () => {
             }}>{stat.label}</div>
           </div>
         ))}
-        <div style={statItemStyle}>
-          <div style={statNumberStyle}>Community</div>
-          <div style={statLabelStyle}>Focused</div>
+        <div style={{
+          ...statItemStyle,
+          animationDelay: '0.8s'
+        }}>
+          <div style={{
+            fontSize: '2.5rem',
+            marginBottom: '1rem',
+            animation: 'float 3s ease-in-out infinite',
+            animationDelay: '2s'
+          }}>🤝</div>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: '900',
+            background: 'linear-gradient(135deg, #ff6600 0%, #ffaa66 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            marginBottom: '0.5rem',
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            animation: 'pulse 2s ease-in-out infinite',
+            lineHeight: '1.1',
+            whiteSpace: 'nowrap',
+            overflow: 'visible',
+            minWidth: 'fit-content'
+          }}>COMMUNITY</div>
+          <div style={{
+            ...statLabelStyle,
+            color: 'rgba(255, 255, 255, 0.8)',
+            fontWeight: '600',
+            letterSpacing: '1px',
+            textTransform: 'uppercase'
+          }}>FOCUSED</div>
         </div>
       </section>
 
