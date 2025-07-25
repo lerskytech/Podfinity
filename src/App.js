@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 // Mock Data
 const mockPodcasts = [
@@ -88,18 +88,7 @@ const mockTestimonials = [
   }
 ];
 
-const mockFAQs = [
-  {
-    id: 1,
-    question: "What equipment do you provide?",
-    answer: "We provide professional-grade microphones, audio interfaces, headphones, cameras for video podcasts, and all necessary recording equipment."
-  },
-  {
-    id: 2,
-    question: "How much does studio time cost?",
-    answer: "Studio rates vary by room: Solo Booth ($75/hr), Fireside Chat ($100/hr), and Rogan Experience ($150/hr)."
-  }
-];
+
 
 // Utility Functions
 const formatDate = (dateString) => {
@@ -114,7 +103,6 @@ const validateEmail = (email) => {
 
 // Components
 const Header = ({ searchTerm, setSearchTerm }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const headerStyle = {
