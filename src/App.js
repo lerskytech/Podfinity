@@ -263,7 +263,7 @@ const Header = ({ searchTerm, setSearchTerm }) => {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '0 2rem',
-        gap: '3rem'
+        gap: '4rem'
       }}>
         <div style={{
           display: 'flex',
@@ -339,41 +339,7 @@ const Header = ({ searchTerm, setSearchTerm }) => {
             </Link>
           ))}
         </nav>
-        
-        <div style={{
-          ...searchContainerStyle,
-          gap: '1.5rem'
-        }}>
-          <Link
-            to="/contact"
-            style={{
-              ...bookButtonStyle,
-              background: 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)',
-              padding: '0.75rem 2rem',
-              borderRadius: '25px',
-              fontWeight: '700',
-              fontSize: '0.9rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              boxShadow: '0 4px 15px rgba(255, 102, 0, 0.4)',
-              border: '2px solid rgba(255, 255, 255, 0.2)',
-              transition: 'all 0.3s ease',
-              textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 6px 20px rgba(255, 102, 0, 0.6)';
-              e.target.style.background = 'linear-gradient(135deg, #ff8533 0%, #ffaa66 100%)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 4px 15px rgba(255, 102, 0, 0.4)';
-              e.target.style.background = 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)';
-            }}
-          >
-            🎙️ BOOK STUDIO
-          </Link>
-        </div>
+
       </div>
     </header>
   );
@@ -1582,7 +1548,7 @@ const PodcastsPage = () => {
     document.title = 'Podcasts - Featured Shows | Podfinity';
   }, []);
 
-  const [searchFilter, setSearchFilter] = useState('');
+
   const [submissionForm, setSubmissionForm] = useState({
     showName: '', hostName: '', email: '', description: '', frequency: ''
   });
@@ -1601,10 +1567,7 @@ const PodcastsPage = () => {
     marginBottom: '3rem'
   };
 
-  const filteredPodcasts = mockPodcasts.filter(podcast =>
-    podcast.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
-    podcast.description.toLowerCase().includes(searchFilter.toLowerCase())
-  );
+  const filteredPodcasts = mockPodcasts;
 
   const handleSubmissionSubmit = (e) => {
     e.preventDefault();
@@ -1616,24 +1579,7 @@ const PodcastsPage = () => {
     <div style={{ marginTop: '80px' }}>
       <section style={sectionStyle}>
         <h1 style={sectionTitleStyle}>Our Podcasts</h1>
-        
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <input
-            type="text"
-            placeholder="Search podcasts..."
-            value={searchFilter}
-            onChange={(e) => setSearchFilter(e.target.value)}
-            style={{
-              padding: '0.75rem 1rem',
-              fontSize: '1rem',
-              border: '2px solid #ddd',
-              borderRadius: '25px',
-              outline: 'none',
-              width: '300px',
-              maxWidth: '100%'
-            }}
-          />
-        </div>
+
 
         {/* Featured Show: Veteran Voices */}
         <div style={{
