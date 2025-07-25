@@ -234,7 +234,8 @@ const Header = ({ searchTerm, setSearchTerm }) => {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '0 2rem'
+        padding: '0 2rem',
+        gap: '3rem'
       }}>
         <div style={{
           display: 'flex',
