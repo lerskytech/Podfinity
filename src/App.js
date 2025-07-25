@@ -54,7 +54,7 @@ const mockPodcasts = [
     title: "Veteran Voices",
     hosts: ["Pete Rodriguez"],
     description: "Stories from the frontlines to the home front, featuring conversations with veterans and their families.",
-    image: "https://via.placeholder.com/400x400/003366/ff6600?text=Veteran+Voices",
+    image: "/20250724_2100_Podcasting at Sunset_remix_01k0zhe2d7eh28w9t3zmcrkk86.png",
     episodes: [
       { id: 87, title: "From Combat to Community", date: "2025-01-22", spotifyId: "4uLU6hMCjMI75M1A2tKUQC" },
       { id: 86, title: "Warriors Haven Farm Story", date: "2025-01-19", spotifyId: "4uLU6hMCjMI75M1A2tKUQC" },
@@ -66,7 +66,7 @@ const mockPodcasts = [
     title: "Boca Business Spotlight",
     hosts: ["Local Business Leaders"],
     description: "Highlighting the entrepreneurial spirit and business excellence in Boca Raton and South Florida.",
-    image: "https://via.placeholder.com/400x400/003366/ff6600?text=Boca+Business",
+    image: "/20250724_2141_Podcast Studio Ambiance_simple_compose_01k0zkrpcvekr8j420kvze66kp.png",
     episodes: []
   }
 ];
@@ -77,7 +77,7 @@ const mockTeam = [
     name: "Pete Rodriguez",
     role: "Founder & CEO",
     bio: "Former Marine turned podcast entrepreneur. Pete brings military discipline and authentic leadership to Podfinity's mission.",
-    image: "https://via.placeholder.com/300x400/003366/ff6600?text=Pete+Rodriguez",
+    image: "/20250724_2113_Visionary Leader Portrait_simple_compose_01k0zj6pnhe9qah6aq6a0k9qbd.png",
     military: true
   },
   {
@@ -85,7 +85,7 @@ const mockTeam = [
     name: "Sarah Johnson",
     role: "Head of Production",
     bio: "Award-winning audio engineer with 10+ years in broadcast media. Sarah ensures every podcast sounds crystal clear.",
-    image: "https://via.placeholder.com/300x400/003366/ff6600?text=Sarah+Johnson",
+    image: "/20250724_2105_Serene Warriors' Retreat_simple_compose_01k0zhpf2venpt8hbvzsgvdrkw.png",
     military: false
   }
 ];
@@ -96,7 +96,7 @@ const mockStudios = [
     name: "The Rogan Experience",
     capacity: "Up to 4 people",
     description: "Our flagship studio designed for dynamic conversations. Features top-tier microphones and a relaxed atmosphere perfect for long-form discussions.",
-    image: "https://via.placeholder.com/600x400/003366/ff6600?text=Rogan+Experience",
+    image: "/20250724_2141_Podcast Studio Ambiance_simple_compose_01k0zkrpcvekr8j420kvze66kp.png",
     price: "$150/hour"
   },
   {
@@ -104,7 +104,7 @@ const mockStudios = [
     name: "The Fireside Chat",
     capacity: "1-2 people",
     description: "Intimate setting perfect for deep conversations and interviews. Cozy atmosphere with professional acoustics.",
-    image: "https://via.placeholder.com/600x400/003366/ff6600?text=Fireside+Chat",
+    image: "/20250724_2136_Cozy Fireside Chat_simple_compose_01k0zkfyzxfp7bq2qavhmca12z.png",
     price: "$100/hour"
   },
   {
@@ -112,7 +112,7 @@ const mockStudios = [
     name: "The Solo Booth",
     capacity: "1 person",
     description: "Compact, professional booth ideal for solo content, voice-overs, and remote guest recordings.",
-    image: "https://via.placeholder.com/600x400/003366/ff6600?text=Solo+Booth",
+    image: "/20250724_2144_Homey Podcast Set_simple_compose_01k0zkz86wfa9s6q8s20t2wrpx.png",
     price: "$75/hour"
   }
 ];
