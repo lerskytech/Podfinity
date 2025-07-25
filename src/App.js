@@ -51,22 +51,22 @@ if (typeof document !== 'undefined') {
 const mockPodcasts = [
   {
     id: 1,
-    title: "Slick & Thick",
-    hosts: ["Mickey Gall", "Gerard Michaels"],
-    description: "UFC Fighter Mickey Gall teams up with Comedian Gerard Michaels for authentic conversations about life, sports, and comedy.",
-    image: "https://via.placeholder.com/400x400/003366/ff6600?text=Slick+%26+Thick",
-    episodes: [
-      { id: 87, title: "Tough Men Cry", date: "2025-01-22", spotifyId: "4uLU6hMCjMI75M1A2tKUQC" },
-      { id: 86, title: "Finding Your Voice", date: "2025-01-19", spotifyId: "4uLU6hMCjMI75M1A2tKUQC" },
-      { id: 85, title: "The Grind Never Stops", date: "2025-01-15", spotifyId: "4uLU6hMCjMI75M1A2tKUQC" }
-    ]
-  },
-  {
-    id: 2,
     title: "Veteran Voices",
     hosts: ["Pete Rodriguez"],
     description: "Stories from the frontlines to the home front, featuring conversations with veterans and their families.",
     image: "https://via.placeholder.com/400x400/003366/ff6600?text=Veteran+Voices",
+    episodes: [
+      { id: 87, title: "From Combat to Community", date: "2025-01-22", spotifyId: "4uLU6hMCjMI75M1A2tKUQC" },
+      { id: 86, title: "Warriors Haven Farm Story", date: "2025-01-19", spotifyId: "4uLU6hMCjMI75M1A2tKUQC" },
+      { id: 85, title: "Mental Health Matters", date: "2025-01-15", spotifyId: "4uLU6hMCjMI75M1A2tKUQC" }
+    ]
+  },
+  {
+    id: 2,
+    title: "Boca Business Spotlight",
+    hosts: ["Local Business Leaders"],
+    description: "Highlighting the entrepreneurial spirit and business excellence in Boca Raton and South Florida.",
+    image: "https://via.placeholder.com/400x400/003366/ff6600?text=Boca+Business",
     episodes: []
   }
 ];
@@ -859,7 +859,7 @@ const AboutPage = () => {
               to not just produce great content, but to make a meaningful impact.
             </p>
             <p style={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
-              Today, we're home to shows like "Slick & Thick" starring UFC Fighter Mickey Gall and Comedian Gerard Michaels, 
+              Today, we're home to shows like "Veteran Voices" featuring authentic military stories and "Boca Business Spotlight" showcasing local entrepreneurship, 
               and we're rapidly expanding our roster with diverse, authentic voices from across South Florida and beyond.
             </p>
           </div>
@@ -1482,7 +1482,7 @@ const PodcastsPage = () => {
           />
         </div>
 
-        {/* Featured Show: Slick & Thick */}
+        {/* Featured Show: Veteran Voices */}
         <div style={{
           backgroundColor: '#003366',
           color: 'white',
@@ -1498,7 +1498,7 @@ const PodcastsPage = () => {
           }}>
             <img
               src={mockPodcasts[0].image}
-              alt="Slick & Thick Podcast"
+              alt="Veteran Voices Podcast"
               style={{
                 width: '100%',
                 borderRadius: '10px',
@@ -1507,14 +1507,13 @@ const PodcastsPage = () => {
             />
             <div>
               <h2 style={{ color: '#ff6600', marginBottom: '1rem', fontSize: '2rem' }}>Featured Show</h2>
-              <h3 style={{ marginBottom: '1rem', fontSize: '1.8rem' }}>Slick & Thick</h3>
+              <h3 style={{ marginBottom: '1rem', fontSize: '1.8rem' }}>Veteran Voices</h3>
               <p style={{ marginBottom: '1rem', opacity: 0.9 }}>
                 {mockPodcasts[0].description}
               </p>
               <div style={{ marginBottom: '1rem' }}>
-                <h4 style={{ color: '#ff6600', marginBottom: '0.5rem' }}>Hosts:</h4>
-                <p><strong>Mickey Gall</strong> - UFC Fighter (7-5 record), known for his authentic approach to combat sports and life</p>
-                <p><strong>Gerard Michaels</strong> - Stand-up comedian bringing humor and perspective to every conversation</p>
+                <h4 style={{ color: '#ff6600', marginBottom: '0.5rem' }}>Host:</h4>
+                <p><strong>Pete Rodriguez</strong> - Former Marine and Podfinity founder, sharing authentic military stories and veteran experiences</p>
               </div>
               <p style={{ fontSize: '0.9rem', opacity: 0.8 }}>New episodes every Wednesday and Sunday</p>
             </div>
