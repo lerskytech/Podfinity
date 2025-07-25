@@ -1,18 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
-// Add CSS animations and responsive styles
+// Add CSS animations
 const globalStyles = `
-  * {
-    box-sizing: border-box;
-  }
-  
-  body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-  }
-  
   @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -47,28 +37,6 @@ const globalStyles = `
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
-  }
-  
-  /* Mobile-first responsive utilities */
-  @media (max-width: 768px) {
-    .mobile-stack {
-      flex-direction: column !important;
-      gap: 1rem !important;
-    }
-    
-    .mobile-center {
-      text-align: center !important;
-    }
-    
-    .mobile-full-width {
-      width: 100% !important;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .mobile-hide {
-      display: none !important;
-    }
   }
 `;
 
@@ -266,9 +234,7 @@ const Header = ({ searchTerm, setSearchTerm }) => {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '0 1rem',
-        flexWrap: 'wrap',
-        gap: '1rem'
+        padding: '0 2rem'
       }}>
         <div style={{
           ...logoStyle,
@@ -299,9 +265,7 @@ const Header = ({ searchTerm, setSearchTerm }) => {
         
         <nav style={{
           ...navStyle,
-          gap: 'clamp(1rem, 2vw, 2.5rem)',
-          flexWrap: 'wrap',
-          justifyContent: 'center'
+          gap: '2.5rem'
         }}>
           {[
             { path: '/', label: 'HOME' },
@@ -344,9 +308,7 @@ const Header = ({ searchTerm, setSearchTerm }) => {
         
         <div style={{
           ...searchContainerStyle,
-          gap: '1rem',
-          flexWrap: 'wrap',
-          justifyContent: 'center'
+          gap: '1.5rem'
         }}>
           <form onSubmit={handleSearch} style={{ position: 'relative' }}>
             <input
@@ -363,8 +325,7 @@ const Header = ({ searchTerm, setSearchTerm }) => {
                 backdropFilter: 'blur(10px)',
                 color: 'white',
                 fontSize: '0.9rem',
-                width: 'clamp(150px, 20vw, 200px)',
-                minWidth: '150px',
+                width: '200px',
                 transition: 'all 0.3s ease',
                 '::placeholder': { color: 'rgba(255, 255, 255, 0.7)' }
               }}
@@ -567,51 +528,48 @@ const HomePage = () => {
 
   const heroContentStyle = {
     maxWidth: '1000px',
-    padding: 'clamp(1rem, 5vw, 3rem)',
+    padding: '3rem',
     position: 'relative',
-    zIndex: 2,
-    width: '100%'
+    zIndex: 2
   };
 
   const heroTitleStyle = {
-    fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
+    fontSize: '4.5rem',
     fontWeight: '900',
-    marginBottom: 'clamp(1rem, 3vw, 1.5rem)',
+    marginBottom: '1.5rem',
     background: 'linear-gradient(135deg, #ffffff 0%, #ff6600 50%, #ffffff 100%)',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     textShadow: '0 4px 8px rgba(0,0,0,0.5)',
-    letterSpacing: 'clamp(1px, 0.5vw, 2px)',
+    letterSpacing: '2px',
     textTransform: 'uppercase',
-    animation: 'titleGlow 3s ease-in-out infinite alternate',
-    lineHeight: '1.1'
+    animation: 'titleGlow 3s ease-in-out infinite alternate'
   };
 
   const heroSubtitleStyle = {
-    fontSize: 'clamp(1rem, 4vw, 1.8rem)',
-    marginBottom: 'clamp(2rem, 5vw, 3rem)',
+    fontSize: '1.8rem',
+    marginBottom: '3rem',
     fontWeight: '300',
-    letterSpacing: 'clamp(0.5px, 0.2vw, 1px)',
+    letterSpacing: '1px',
     textShadow: '0 2px 4px rgba(0,0,0,0.7)',
-    animation: 'fadeInUp 1s ease-out 0.5s both',
-    lineHeight: '1.4'
+    animation: 'fadeInUp 1s ease-out 0.5s both'
   };
 
   const statsBarStyle = {
     background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
-    padding: 'clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem)',
+    padding: '4rem 2rem',
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: 'clamp(1.5rem, 4vw, 3rem)',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '3rem',
     textAlign: 'center',
     position: 'relative',
     overflow: 'hidden'
   };
 
   const statItemStyle = {
-    padding: 'clamp(1rem, 3vw, 2rem)',
+    padding: '2rem',
     background: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 'clamp(15px, 3vw, 20px)',
+    borderRadius: '20px',
     border: '1px solid rgba(255, 102, 0, 0.2)',
     backdropFilter: 'blur(10px)',
     transition: 'all 0.3s ease',
@@ -620,15 +578,14 @@ const HomePage = () => {
   };
 
   const statNumberStyle = {
-    fontSize: 'clamp(2rem, 6vw, 3.5rem)',
+    fontSize: '3.5rem',
     fontWeight: '900',
     background: 'linear-gradient(135deg, #ff6600 0%, #ffaa66 100%)',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
-    marginBottom: 'clamp(0.5rem, 2vw, 1rem)',
+    marginBottom: '1rem',
     textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-    animation: 'pulse 2s ease-in-out infinite',
-    lineHeight: '1.1'
+    animation: 'pulse 2s ease-in-out infinite'
   };
 
   const statLabelStyle = {
@@ -653,25 +610,23 @@ const HomePage = () => {
   const buttonStyle = {
     background: 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)',
     color: 'white',
-    padding: 'clamp(0.8rem, 2vw, 1.2rem) clamp(1.5rem, 4vw, 3rem)',
+    padding: '1.2rem 3rem',
     border: '2px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '50px',
-    fontSize: 'clamp(0.9rem, 2vw, 1.1rem)',
+    fontSize: '1.1rem',
     fontWeight: '700',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     textDecoration: 'none',
     display: 'inline-block',
     textAlign: 'center',
-    marginTop: 'clamp(1rem, 3vw, 2rem)',
+    marginTop: '2rem',
     textTransform: 'uppercase',
-    letterSpacing: 'clamp(0.5px, 0.2vw, 1px)',
+    letterSpacing: '1px',
     boxShadow: '0 8px 25px rgba(255, 102, 0, 0.4)',
     backdropFilter: 'blur(10px)',
     textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-    animation: 'float 3s ease-in-out infinite',
-    minWidth: 'fit-content',
-    whiteSpace: 'nowrap'
+    animation: 'float 3s ease-in-out infinite'
   };
 
   return (
@@ -716,13 +671,7 @@ const HomePage = () => {
             <strong>Military Precision. Veteran Excellence. Uncompromising Quality.</strong><br/>
             We Handle the Tech, You Share Your Story.
           </p>
-          <div style={{ 
-            display: 'flex', 
-            gap: 'clamp(1rem, 3vw, 2rem)', 
-            justifyContent: 'center', 
-            flexWrap: 'wrap',
-            width: '100%'
-          }}>
+          <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link 
               to="/studios" 
               style={buttonStyle}
