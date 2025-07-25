@@ -1,6 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
+// Add CSS animations
+const globalStyles = `
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes titleGlow {
+    0% { text-shadow: 0 4px 8px rgba(0,0,0,0.5), 0 0 20px rgba(255, 102, 0, 0.3); }
+    100% { text-shadow: 0 4px 8px rgba(0,0,0,0.5), 0 0 40px rgba(255, 102, 0, 0.6); }
+  }
+  
+  @keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  @keyframes slideInLeft {
+    0% { opacity: 0; transform: translateX(-50px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes slideInRight {
+    0% { opacity: 0; transform: translateX(50px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = globalStyles;
+  document.head.appendChild(styleSheet);
+}
+
 // Mock Data
 const mockPodcasts = [
   {
@@ -106,18 +152,15 @@ const Header = ({ searchTerm, setSearchTerm }) => {
   const navigate = useNavigate();
 
   const headerStyle = {
-    position: 'fixed',
+    background: 'linear-gradient(135deg, #001122 0%, #003366 50%, #004080 100%)',
+    padding: '1.5rem 0',
+    position: 'sticky',
     top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#003366',
-    color: 'white',
-    padding: '1rem 2rem',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     zIndex: 1000,
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+    boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+    backdropFilter: 'blur(10px)',
+    borderBottom: '2px solid rgba(255, 102, 0, 0.3)',
+    transition: 'all 0.3s ease'
   };
 
   const logoStyle = {
@@ -185,32 +228,149 @@ const Header = ({ searchTerm, setSearchTerm }) => {
 
   return (
     <header style={headerStyle}>
-      <div style={logoStyle}>
-        <div style={logoImageStyle}>P</div>
-        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>Podfinity</h1>
-      </div>
-      
-      <nav style={navStyle}>
-        <Link to="/" style={navLinkStyle}>Home</Link>
-        <Link to="/about" style={navLinkStyle}>About</Link>
-        <Link to="/studios" style={navLinkStyle}>Studios</Link>
-        <Link to="/podcasts" style={navLinkStyle}>Podcasts</Link>
-        <Link to="/services" style={navLinkStyle}>Services</Link>
-        <Link to="/team" style={navLinkStyle}>Team</Link>
-        <Link to="/contact" style={navLinkStyle}>Contact</Link>
-      </nav>
-      
-      <div style={searchContainerStyle}>
-        <form onSubmit={handleSearch}>
-          <input
-            type="text"
-            placeholder="Search podcasts..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={searchInputStyle}
-          />
-        </form>
-        <Link to="/contact" style={bookButtonStyle}>Book Studio</Link>
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '0 2rem'
+      }}>
+        <div style={{
+          ...logoStyle,
+          cursor: 'pointer',
+          transition: 'transform 0.3s ease',
+          ':hover': { transform: 'scale(1.05)' }
+        }} onClick={() => navigate('/')}>
+          <div style={{
+            ...logoImageStyle,
+            background: 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)',
+            boxShadow: '0 4px 15px rgba(255, 102, 0, 0.4)',
+            border: '2px solid rgba(255, 255, 255, 0.2)',
+            fontSize: '1.4rem',
+            fontWeight: '900',
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+          }}>⚡</div>
+          <h1 style={{
+            margin: 0,
+            fontSize: '1.8rem',
+            fontWeight: '800',
+            background: 'linear-gradient(135deg, #ffffff 0%, #cccccc 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            letterSpacing: '1px'
+          }}>PODFINITY</h1>
+        </div>
+        
+        <nav style={{
+          ...navStyle,
+          gap: '2.5rem'
+        }}>
+          {[
+            { path: '/', label: 'HOME' },
+            { path: '/about', label: 'ABOUT' },
+            { path: '/studios', label: 'STUDIOS' },
+            { path: '/podcasts', label: 'PODCASTS' },
+            { path: '/services', label: 'SERVICES' },
+            { path: '/team', label: 'TEAM' },
+            { path: '/contact', label: 'CONTACT' }
+          ].map(({ path, label }) => (
+            <Link
+              key={path}
+              to={path}
+              style={{
+                ...navLinkStyle,
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase',
+                position: 'relative',
+                padding: '0.5rem 0',
+                borderBottom: '2px solid transparent',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = '#ff6600';
+                e.target.style.borderBottomColor = '#ff6600';
+                e.target.style.textShadow = '0 0 8px rgba(255, 102, 0, 0.6)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = 'white';
+                e.target.style.borderBottomColor = 'transparent';
+                e.target.style.textShadow = 'none';
+              }}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+        
+        <div style={{
+          ...searchContainerStyle,
+          gap: '1.5rem'
+        }}>
+          <form onSubmit={handleSearch} style={{ position: 'relative' }}>
+            <input
+              type="text"
+              placeholder="Search podcasts..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                ...searchInputStyle,
+                padding: '0.75rem 1rem',
+                borderRadius: '25px',
+                border: '2px solid rgba(255, 255, 255, 0.2)',
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(10px)',
+                color: 'white',
+                fontSize: '0.9rem',
+                width: '200px',
+                transition: 'all 0.3s ease',
+                '::placeholder': { color: 'rgba(255, 255, 255, 0.7)' }
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = '#ff6600';
+                e.target.style.boxShadow = '0 0 15px rgba(255, 102, 0, 0.3)';
+                e.target.style.background = 'rgba(255, 255, 255, 0.15)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                e.target.style.boxShadow = 'none';
+                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              }}
+            />
+          </form>
+          <Link
+            to="/contact"
+            style={{
+              ...bookButtonStyle,
+              background: 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)',
+              padding: '0.75rem 2rem',
+              borderRadius: '25px',
+              fontWeight: '700',
+              fontSize: '0.9rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+              boxShadow: '0 4px 15px rgba(255, 102, 0, 0.4)',
+              border: '2px solid rgba(255, 255, 255, 0.2)',
+              transition: 'all 0.3s ease',
+              textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 6px 20px rgba(255, 102, 0, 0.6)';
+              e.target.style.background = 'linear-gradient(135deg, #ff8533 0%, #ffaa66 100%)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 4px 15px rgba(255, 102, 0, 0.4)';
+              e.target.style.background = 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)';
+            }}
+          >
+            🎙️ BOOK STUDIO
+          </Link>
+        </div>
       </div>
     </header>
   );
@@ -354,53 +514,78 @@ const HomePage = () => {
 
   const heroStyle = {
     position: 'relative',
-    height: '70vh',
-    backgroundImage: 'linear-gradient(rgba(0,51,102,0.7), rgba(0,51,102,0.7)), url("https://via.placeholder.com/1920x1080/003366/ff6600?text=Podfinity+Hero")',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    height: '100vh',
+    background: 'linear-gradient(135deg, #000000 0%, #001122 25%, #003366 50%, #004080 75%, #0066cc 100%)',
+    backgroundSize: '400% 400%',
+    animation: 'gradientShift 8s ease infinite',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     color: 'white',
-    textAlign: 'center'
+    textAlign: 'center',
+    overflow: 'hidden'
   };
 
   const heroContentStyle = {
-    maxWidth: '800px',
-    padding: '2rem'
+    maxWidth: '1000px',
+    padding: '3rem',
+    position: 'relative',
+    zIndex: 2
   };
 
   const heroTitleStyle = {
-    fontSize: '3.5rem',
-    fontWeight: 'bold',
-    marginBottom: '1rem',
-    textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+    fontSize: '4.5rem',
+    fontWeight: '900',
+    marginBottom: '1.5rem',
+    background: 'linear-gradient(135deg, #ffffff 0%, #ff6600 50%, #ffffff 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    textShadow: '0 4px 8px rgba(0,0,0,0.5)',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+    animation: 'titleGlow 3s ease-in-out infinite alternate'
   };
 
   const heroSubtitleStyle = {
-    fontSize: '1.5rem',
-    marginBottom: '2rem',
-    opacity: 0.9
+    fontSize: '1.8rem',
+    marginBottom: '3rem',
+    fontWeight: '300',
+    letterSpacing: '1px',
+    textShadow: '0 2px 4px rgba(0,0,0,0.7)',
+    animation: 'fadeInUp 1s ease-out 0.5s both'
   };
 
   const statsBarStyle = {
-    backgroundColor: '#f8f9fa',
-    padding: '2rem',
+    background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+    padding: '4rem 2rem',
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '2rem',
-    textAlign: 'center'
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '3rem',
+    textAlign: 'center',
+    position: 'relative',
+    overflow: 'hidden'
   };
 
   const statItemStyle = {
-    padding: '1rem'
+    padding: '2rem',
+    background: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: '20px',
+    border: '1px solid rgba(255, 102, 0, 0.2)',
+    backdropFilter: 'blur(10px)',
+    transition: 'all 0.3s ease',
+    cursor: 'pointer',
+    animation: 'fadeInUp 0.8s ease-out'
   };
 
   const statNumberStyle = {
-    fontSize: '2.5rem',
-    fontWeight: 'bold',
-    color: '#003366',
-    marginBottom: '0.5rem'
+    fontSize: '3.5rem',
+    fontWeight: '900',
+    background: 'linear-gradient(135deg, #ff6600 0%, #ffaa66 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    marginBottom: '1rem',
+    textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+    animation: 'pulse 2s ease-in-out infinite'
   };
 
   const statLabelStyle = {
@@ -423,46 +608,153 @@ const HomePage = () => {
   };
 
   const buttonStyle = {
-    backgroundColor: '#ff6600',
+    background: 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)',
     color: 'white',
-    padding: '0.75rem 1.5rem',
-    border: 'none',
-    borderRadius: '5px',
-    fontSize: '1rem',
-    fontWeight: 'bold',
+    padding: '1.2rem 3rem',
+    border: '2px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '50px',
+    fontSize: '1.1rem',
+    fontWeight: '700',
     cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
+    transition: 'all 0.3s ease',
     textDecoration: 'none',
     display: 'inline-block',
     textAlign: 'center',
-    marginTop: '1rem'
+    marginTop: '2rem',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    boxShadow: '0 8px 25px rgba(255, 102, 0, 0.4)',
+    backdropFilter: 'blur(10px)',
+    textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+    animation: 'float 3s ease-in-out infinite'
   };
 
   return (
     <div>
       <section style={heroStyle}>
+        {/* Animated background elements */}
+        <div style={{
+          position: 'absolute',
+          top: '10%',
+          left: '10%',
+          width: '100px',
+          height: '100px',
+          background: 'rgba(255, 102, 0, 0.1)',
+          borderRadius: '50%',
+          animation: 'float 6s ease-in-out infinite'
+        }}></div>
+        <div style={{
+          position: 'absolute',
+          top: '60%',
+          right: '15%',
+          width: '150px',
+          height: '150px',
+          background: 'rgba(255, 102, 0, 0.05)',
+          borderRadius: '50%',
+          animation: 'float 8s ease-in-out infinite reverse'
+        }}></div>
+        <div style={{
+          position: 'absolute',
+          bottom: '20%',
+          left: '20%',
+          width: '80px',
+          height: '80px',
+          background: 'rgba(255, 255, 255, 0.1)',
+          borderRadius: '50%',
+          animation: 'float 4s ease-in-out infinite'
+        }}></div>
+        
         <div style={heroContentStyle}>
-          <h1 style={heroTitleStyle}>Your Voice, Amplified.</h1>
+          <h1 style={heroTitleStyle}>YOUR VOICE, AMPLIFIED</h1>
           <p style={heroSubtitleStyle}>
-            Boca Raton's Premier Podcast Studio and Production House. We Handle the Tech, You Share Your Story.
+            🎖️ BOCA RATON'S PREMIER PODCAST STUDIO 🎖️<br/>
+            <strong>Military Precision. Veteran Excellence. Uncompromising Quality.</strong><br/>
+            We Handle the Tech, You Share Your Story.
           </p>
-          <Link to="/studios" style={buttonStyle}>Book Your Session</Link>
+          <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link 
+              to="/studios" 
+              style={buttonStyle}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-5px) scale(1.05)';
+                e.target.style.boxShadow = '0 15px 35px rgba(255, 102, 0, 0.6)';
+                e.target.style.background = 'linear-gradient(135deg, #ff8533 0%, #ffaa66 100%)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0) scale(1)';
+                e.target.style.boxShadow = '0 8px 25px rgba(255, 102, 0, 0.4)';
+                e.target.style.background = 'linear-gradient(135deg, #ff6600 0%, #ff8533 100%)';
+              }}
+            >
+              🎙️ BOOK YOUR SESSION
+            </Link>
+            <Link 
+              to="/about" 
+              style={{
+                ...buttonStyle,
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
+                backdropFilter: 'blur(10px)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-5px) scale(1.05)';
+                e.target.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.target.style.borderColor = 'rgba(255, 102, 0, 0.8)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0) scale(1)';
+                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+              }}
+            >
+              🏆 OUR MISSION
+            </Link>
+          </div>
         </div>
       </section>
 
       <section style={statsBarStyle}>
-        <div style={statItemStyle}>
-          <div style={statNumberStyle}>150+</div>
-          <div style={statLabelStyle}>Shows Produced</div>
-        </div>
-        <div style={statItemStyle}>
-          <div style={statNumberStyle}>10+</div>
-          <div style={statLabelStyle}>Years Experience</div>
-        </div>
-        <div style={statItemStyle}>
-          <div style={statNumberStyle}>5-Star</div>
-          <div style={statLabelStyle}>Rated Studio</div>
-        </div>
+        {[
+          { number: '150+', label: 'SHOWS PRODUCED', icon: '🎧' },
+          { number: '10+', label: 'YEARS EXPERIENCE', icon: '⚡' },
+          { number: '5-STAR', label: 'RATED STUDIO', icon: '🏆' },
+          { number: '24/7', label: 'SUPPORT READY', icon: '🛡️' }
+        ].map((stat, index) => (
+          <div 
+            key={index}
+            style={{
+              ...statItemStyle,
+              animationDelay: `${index * 0.2}s`
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-10px) scale(1.05)';
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(255, 102, 0, 0.3)';
+              e.currentTarget.style.borderColor = 'rgba(255, 102, 0, 0.6)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.borderColor = 'rgba(255, 102, 0, 0.2)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+            }}
+          >
+            <div style={{
+              fontSize: '2.5rem',
+              marginBottom: '1rem',
+              animation: 'float 3s ease-in-out infinite',
+              animationDelay: `${index * 0.5}s`
+            }}>{stat.icon}</div>
+            <div style={statNumberStyle}>{stat.number}</div>
+            <div style={{
+              ...statLabelStyle,
+              color: 'rgba(255, 255, 255, 0.8)',
+              fontWeight: '600',
+              letterSpacing: '1px',
+              textTransform: 'uppercase'
+            }}>{stat.label}</div>
+          </div>
+        ))}
         <div style={statItemStyle}>
           <div style={statNumberStyle}>Community</div>
           <div style={statLabelStyle}>Focused</div>
