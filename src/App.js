@@ -280,7 +280,12 @@ const AnimatedSection = ({ children, id, className = '' }) => {
 // --- CORE COMPONENTS ---
 
 const Header = () => {
+    const [isFlipped, setIsFlipped] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const handleIconClick = () => {
+        setIsFlipped(prev => !prev);
+    };
 
     // const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -294,7 +299,7 @@ const Header = () => {
     return (
         <header className="header">
             <div className="logo-container">
-                <a href="#home" className="logo-link"><img src="/NewIcon.png" alt="Podfinity Logo" className="logo" /></a>
+                <a href="#home" className="logo-link"><img src="/NewIcon.png" alt="Podfinity Logo" className={`logo ${isFlipped ? 'flipped' : ''}`} onClick={handleIconClick} /></a>
                 <a href="#home" className="title-link"><h1>PODFINITY</h1></a>
             </div>
             <div className="desktop-nav">
@@ -333,9 +338,14 @@ const Header = () => {
                     gap: 1rem;
                 }
                 .logo-link { display: inline-block; line-height: 0; }
-                .logo { 
-                    height: 60px; 
-                    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                .logo {
+                    height: 60px;
+                    transition: transform 0.6s;
+                    transform-style: preserve-3d;
+                    cursor: pointer;
+                }
+                .logo.flipped {
+                    transform: rotateY(180deg);
                 }
                 .logo:hover {
                     transform: scale(1.15);
