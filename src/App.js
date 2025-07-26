@@ -587,6 +587,11 @@ const ContactSection = () => (
             .contact-container { display: grid; grid-template-columns: 1fr 1fr; max-width: 1100px; margin: 0 auto; gap: 3rem; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); padding: 3rem; border-radius: 15px; }
             .contact-form input, .contact-form textarea { width: 100%; padding: 1rem; margin-bottom: 1rem; background: var(--primary-color); border: 1px solid var(--secondary-color); border-radius: 5px; color: var(--text-color); font-family: var(--font-main); }
             .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--text-color-secondary); }
+            .contact-form textarea {
+                resize: vertical;
+                min-height: 120px; /* Approx 6 rows */
+                max-height: 300px;
+            }
             .submit-btn { width: 100%; padding: 1rem; background: var(--accent-color); color: var(--background-color); border: none; border-radius: 5px; font-family: var(--font-display); font-size: 1.2rem; cursor: pointer; transition: background-color 0.3s; }
             .submit-btn:hover { background: var(--text-color); }
             .contact-info { padding-left: 2rem; border-left: 2px solid var(--accent-color); }
