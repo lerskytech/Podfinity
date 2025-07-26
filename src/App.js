@@ -223,8 +223,9 @@ const GlobalStyles = () => (
                 gap: 2rem;
             }
             .about-container {
-                display: flex;
+                display: flex; 
                 flex-direction: column;
+                align-items: center; /* Ensure content is centered in the column */
             }
             .about-image-container {
                 margin: 0 auto 2rem auto; /* Center and add bottom margin */
@@ -268,28 +269,29 @@ const AnimatedSection = ({ children, id, className = '' }) => {
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+    // This function will be used on the mobile nav links to close the menu upon selection
+    const handleLinkClick = () => {
+        if (isMenuOpen) {
+            setIsMenuOpen(false);
+        }
+    };
+
     return (
         <header className="header">
             <div className="logo-container">
                 <a href="#home" className="logo-link"><img src="/NewIcon.png" alt="Podfinity Logo" className="logo" /></a>
                 <a href="#home" className="title-link"><h1>PODFINITY</h1></a>
             </div>
-            <nav className="desktop-nav">
-                <a href="#home">HOME</a>
-                <a href="#about">ABOUT</a>
-                <a href="#studios">STUDIOS</a>
-                <a href="#services">SERVICES</a>
-                <a href="#team">TEAM</a>
-                <a href="#contact">CONTACT</a>
-            </nav>
-            <button className="mobile-menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                <div className={`hamburger ${isMenuOpen ? 'is-active' : ''}`}>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </button>
-            <div className={`mobile-nav ${isMenuOpen ? 'is-open' : ''}`}>
+            <div className="desktop-nav">
+                <a href="#home" className="nav-link">HOME</a>
+                <a href="#about" className="nav-link">ABOUT</a>
+                <a href="#studios" className="nav-link">STUDIOS</a>
+                <a href="#podcasts" className="nav-link">PODCASTS</a>
+                <a href="#services" className="nav-link">SERVICES</a>
+                <a href="#team" className="nav-link">TEAM</a>
+                <a href="#contact" className="nav-link">CONTACT</a>
                 <a href="#home" onClick={() => setIsMenuOpen(false)}>HOME</a>
                 <a href="#about" onClick={() => setIsMenuOpen(false)}>ABOUT</a>
                 <a href="#studios" onClick={() => setIsMenuOpen(false)}>STUDIOS</a>
@@ -361,70 +363,84 @@ const Header = () => {
                 .desktop-nav {
                     display: flex; /* Show by default */
                 }
-                .mobile-menu-btn {
-                    display: none; /* Hide by default */
+                .mobile-menu-icon {
+                    display: none; /* Hidden by default on desktop */
+                    cursor: pointer;
+                    z-index: 1002; /* Above overlay */
+                    position: relative;
                 }
-                .mobile-nav {
-                    display: none; /* Hide by default */
+
+                .mobile-menu-icon .bar {
+                    display: block;
+                    width: 25px;
+                    height: 3px;
+                    margin: 5px 0;
+                    background-color: #fff;
+                    transition: 0.4s;
                 }
-                @media (max-width: 1024px) { /* Adjusted breakpoint for better tablet handling */
+
+                /* Slide-in Menu */
+                .mobile-nav-menu {
+                    position: fixed;
+                    top: 0;
+                    right: -100%; /* Start off-screen */
+                    width: 250px; /* Narrower for a sleeker look */
+                    height: 100%;
+                    background: rgba(10, 25, 47, 0.85); /* Glassmorphism */
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    box-shadow: -5px 0 15px rgba(0,0,0,0.25);
+                    z-index: 1001;
+                    transition: right 0.35s ease-in-out;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center; /* Center links vertically */
+                }
+
+                .mobile-nav-menu.open {
+                    right: 0; /* Slide in */
+                }
+
+                .mobile-nav-menu .nav-link {
+                    padding: 1rem 0;
+                    font-size: 1.2rem; /* Slightly smaller for better fit */
+                    color: #fff;
+                    text-align: center;
+                    width: 100%;
+                    text-decoration: none;
+                    transition: background-color 0.2s;
+                }
+                .mobile-nav-menu .nav-link:hover {
+                    background-color: rgba(255, 255, 255, 0.1);
+                }
+
+                .close-menu-btn {
+                    position: absolute;
+                    top: 15px;
+                    right: 20px;
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 2.2rem;
+                    font-weight: lighter;
+                    cursor: pointer;
+                    line-height: 1;
+                }
+
+                @media (max-width: 1024px) { 
                     .desktop-nav {
                         display: none;
                     }
-                    .mobile-menu-btn {
-                        display: block;
-                        position: absolute;
-                        top: 1rem;
-                        right: 1rem;
-                        background: none;
-                        border: none;
-                        padding: 0;
-                        cursor: pointer;
-                    }
-                    .mobile-nav {
-                        display: block;
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100vh;
-                        background: var(--background-color);
-                        padding: 2rem;
-                        transform: translateX(-100%);
-                        transition: transform 0.3s ease;
-                    }
-                    .mobile-nav.is-open {
-                        transform: translateX(0);
-                    }
-                    .mobile-nav a {
-                        display: block;
-                        margin-bottom: 1rem;
-                        font-size: 1.5rem;
-                        color: var(--text-color);
-                        text-decoration: none;
-                    }
-                    .mobile-nav a:hover {
-                        color: var(--accent-color);
-                    }
-                    .hamburger {
-                        display: flex;
+                    .mobile-menu-icon {
+                        display: flex; /* Use flex to center bars inside */
                         flex-direction: column;
-                        gap: 0.5rem;
-                    }
-                    .hamburger span {
-                        width: 30px;
-                        height: 3px;
-                        background: var(--text-color);
-                        transition: transform 0.3s ease;
-                    }
-                    .hamburger.is-active span:nth-child(1) {
-                        transform: rotate(45deg) translate(5px, 5px);
-                    }
-                    .hamburger.is-active span:nth-child(2) {
-                        opacity: 0;
-                    }
-                    .hamburger.is-active span:nth-child(3) {
-                        transform: rotate(-45deg) translate(5px, -5px);
+                        justify-content: center;
+                        align-items: center;
+                        position: absolute; /* Take out of flow to position correctly */
+                        top: 50%;
+                        right: 1rem;
+                        transform: translateY(-50%); /* Perfect vertical centering */
                     }
                 }
             `}</style>
@@ -928,17 +944,19 @@ const Footer = () => (
 
 const App = () => {
     useEffect(() => {
-        let ticking = false;
         let scrollListener = null;
 
         const setupScrollListener = () => {
-            // Clean up existing listener if any
+            // Always clean up existing listener
             if (scrollListener) {
                 window.removeEventListener('scroll', scrollListener);
+                scrollListener = null;
             }
+            document.body.style.backgroundPositionY = '0'; // Reset on resize
 
             if (window.innerWidth > 768) {
                 // Desktop: Add performant parallax effect
+                let ticking = false;
                 scrollListener = () => {
                     if (!ticking) {
                         window.requestAnimationFrame(() => {
@@ -949,11 +967,8 @@ const App = () => {
                     }
                 };
                 window.addEventListener('scroll', scrollListener, { passive: true });
-            } else {
-                // Mobile: Remove parallax effect entirely for native scroll performance
-                document.body.style.backgroundPositionY = '0';
-                scrollListener = null;
             }
+            // On mobile, scrollListener remains null and no event listener is attached.
         };
 
         // Initial setup
@@ -963,6 +978,7 @@ const App = () => {
         window.addEventListener('resize', setupScrollListener);
 
         return () => {
+            // Final cleanup
             if (scrollListener) {
                 window.removeEventListener('scroll', scrollListener);
             }
