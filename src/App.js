@@ -223,6 +223,7 @@ const GlobalStyles = () => (
                 gap: 2rem;
             }
             .about-container {
+                display: flex;
                 flex-direction: column;
             }
             .about-image-container {
@@ -928,31 +929,44 @@ const Footer = () => (
 const App = () => {
     useEffect(() => {
         let ticking = false;
-        let lastScrollY = 0;
+        let scrollListener = null;
 
-        const handleScroll = () => {
-            lastScrollY = window.scrollY;
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    if (window.innerWidth > 768) {
-                        document.body.style.backgroundPositionY = `-${lastScrollY * 0.5}px`;
-                    } else {
-                        document.body.style.backgroundPositionY = '0';
+        const setupScrollListener = () => {
+            // Clean up existing listener if any
+            if (scrollListener) {
+                window.removeEventListener('scroll', scrollListener);
+            }
+
+            if (window.innerWidth > 768) {
+                // Desktop: Add performant parallax effect
+                scrollListener = () => {
+                    if (!ticking) {
+                        window.requestAnimationFrame(() => {
+                            document.body.style.backgroundPositionY = `-${window.scrollY * 0.5}px`;
+                            ticking = false;
+                        });
+                        ticking = true;
                     }
-                    ticking = false;
-                });
-                ticking = true;
+                };
+                window.addEventListener('scroll', scrollListener, { passive: true });
+            } else {
+                // Mobile: Remove parallax effect entirely for native scroll performance
+                document.body.style.backgroundPositionY = '0';
+                scrollListener = null;
             }
         };
-        
-        // Initial check and setup listeners
-        handleScroll();
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        window.addEventListener('resize', handleScroll, { passive: true });
+
+        // Initial setup
+        setupScrollListener();
+
+        // Re-run on resize
+        window.addEventListener('resize', setupScrollListener);
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
-            window.removeEventListener('resize', handleScroll);
+            if (scrollListener) {
+                window.removeEventListener('scroll', scrollListener);
+            }
+            window.removeEventListener('resize', setupScrollListener);
         };
     }, []);
 
