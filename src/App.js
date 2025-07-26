@@ -122,7 +122,7 @@ const Header = () => (
     <header className="header">
         <div className="logo-container">
             <a href="#home" className="logo-link"><img src="/NewIcon.png" alt="Podfinity Logo" className="logo" /></a>
-            <h1>PODFINITY</h1>
+            <a href="#home" className="title-link"><h1>PODFINITY</h1></a>
         </div>
         <nav>
             <a href="#home">HOME</a>
@@ -160,7 +160,31 @@ const Header = () => (
             .logo:hover {
                 transform: scale(1.15);
             }
-            h1 { font-size: 1.8rem; }
+            h1 { font-size: 1.8rem; margin: 0; }
+            .title-link {
+                color: var(--text-color);
+                text-decoration: none;
+                position: relative;
+                padding-bottom: 5px; /* space for underline */
+                transition: color 0.3s ease;
+            }
+            .title-link::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: var(--accent-color);
+                transition: width 0.3s ease;
+            }
+            .title-link:hover {
+                color: var(--accent-color);
+            }
+            .title-link:hover::after {
+                width: 100%;
+            }
             nav { display: flex; gap: 1.5rem; }
             nav a {
                 color: var(--text-color);
