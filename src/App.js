@@ -52,22 +52,25 @@ const GlobalStyles = () => (
             padding: 0;
         }
 
-        html {
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            background-color: var(--background-color);
+            color: var(--text-color);
             scroll-behavior: smooth;
-            scroll-padding-top: 92px; /* Offset for fixed header */
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
 
         body {
-            font-family: var(--font-main);
-            background: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            position: relative;
+            min-height: 100vh; /* DEFINITIVE FIX: Allow body to grow, ensuring it's at least viewport height */
+            width: 100%; /* Ensure body takes full width */
+            background-attachment: fixed;
         }
 
         body::before {
             content: '';
-            position: fixed;
+            position: absolute; /* DEFINITIVE FIX: Prevents scroll trapping */
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: radial-gradient(ellipse at center, rgba(13, 27, 42, 0) 0%, var(--background-color) 80%);
