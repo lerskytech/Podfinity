@@ -223,10 +223,20 @@ const GlobalStyles = () => (
                 gap: 2rem;
             }
             .about-container {
-                display: flex; 
-                flex-direction: column;
-                align-items: center; /* Ensure content is centered in the column */
+                display: flex !important; /* Override grid layout */
+                flex-direction: column !important;
+                gap: 2rem !important; /* Add space between stacked items */
             }
+
+            .about-text,
+            .about-image-container {
+                transform: none !important; /* Reset desktop transform */
+                position: static !important; /* Reset desktop positioning */
+                width: 100%;
+                max-width: 500px; /* Constrain width for readability */
+                margin: 0 auto; /* Center the items */
+            }
+
             .about-image-container {
                 margin: 0 auto 2rem auto; /* Center and add bottom margin */
                 max-width: 90%; /* Give some padding */
@@ -946,16 +956,18 @@ const App = () => {
     useEffect(() => {
         let scrollListener = null;
 
-        const setupScrollListener = () => {
-            // Always clean up existing listener
+        const handleResize = () => {
+            // Always remove the listener first to avoid duplicates
             if (scrollListener) {
                 window.removeEventListener('scroll', scrollListener);
                 scrollListener = null;
             }
-            document.body.style.backgroundPositionY = '0'; // Reset on resize
 
+            // Always reset the background position
+            document.body.style.backgroundPositionY = '0';
+
+            // Only add the listener on desktop screens
             if (window.innerWidth > 768) {
-                // Desktop: Add performant parallax effect
                 let ticking = false;
                 scrollListener = () => {
                     if (!ticking) {
@@ -968,21 +980,18 @@ const App = () => {
                 };
                 window.addEventListener('scroll', scrollListener, { passive: true });
             }
-            // On mobile, scrollListener remains null and no event listener is attached.
         };
 
-        // Initial setup
-        setupScrollListener();
+        // Set up listeners
+        handleResize(); // Run once on load
+        window.addEventListener('resize', handleResize);
 
-        // Re-run on resize
-        window.addEventListener('resize', setupScrollListener);
-
+        // Cleanup function
         return () => {
-            // Final cleanup
             if (scrollListener) {
                 window.removeEventListener('scroll', scrollListener);
             }
-            window.removeEventListener('resize', setupScrollListener);
+            window.removeEventListener('resize', handleResize);
         };
     }, []);
 
