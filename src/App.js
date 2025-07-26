@@ -131,7 +131,7 @@ const GlobalStyles = () => (
 
         @media (max-width: 768px) {
             html {
-                scroll-padding-top: 76px; /* Match mobile header */
+                scroll-padding-top: 80px; /* Match mobile header */
             }
             .header {
                 padding: 0.5rem 1rem;
@@ -368,6 +368,19 @@ const HeroSection = () => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
+        if (window.innerWidth <= 768) {
+            // On mobile, just set a static background and do nothing else.
+            const canvas = canvasRef.current;
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = 700;
+                ctx.fillStyle = 'var(--background-color)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            return;
+        }
+
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         let width = canvas.width = window.innerWidth;
