@@ -309,12 +309,12 @@ const Header = () => {
                 <a href="#services" className="nav-link">SERVICES</a>
                 <a href="#team" className="nav-link">TEAM</a>
                 <a href="#contact" className="nav-link">CONTACT</a>
-                <a href="#home" onClick={() => setIsMenuOpen(false)}>HOME</a>
-                <a href="#about" onClick={() => setIsMenuOpen(false)}>ABOUT</a>
-                <a href="#studios" onClick={() => setIsMenuOpen(false)}>STUDIOS</a>
-                <a href="#services" onClick={() => setIsMenuOpen(false)}>SERVICES</a>
-                <a href="#team" onClick={() => setIsMenuOpen(false)}>TEAM</a>
-                <a href="#contact" onClick={() => setIsMenuOpen(false)}>CONTACT</a>
+                <a href="#home">HOME</a>
+                <a href="#about">ABOUT</a>
+                <a href="#studios">STUDIOS</a>
+                <a href="#services">SERVICES</a>
+                <a href="#team">TEAM</a>
+                <a href="#contact">CONTACT</a>
             </div>
             <style jsx>{`
                 .header {
