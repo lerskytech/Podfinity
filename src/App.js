@@ -585,7 +585,7 @@ const ContactSection = () => (
                 background-attachment: fixed;
             }
             .contact-container { display: grid; grid-template-columns: 1fr 1fr; max-width: 1100px; margin: 0 auto; gap: 3rem; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); padding: 3rem; border-radius: 15px; }
-            .contact-form input, .contact-form textarea { width: 100%; padding: 1rem; margin-bottom: 1rem; background: var(--primary-color); border: 1px solid var(--secondary-color); border-radius: 5px; color: var(--text-color); font-family: var(--font-main); }
+            .contact-form input, .contact-form textarea { box-sizing: border-box; width: 100%; padding: 1rem; margin-bottom: 1rem; background: var(--primary-color); border: 1px solid var(--secondary-color); border-radius: 5px; color: var(--text-color); font-family: var(--font-main); }
             .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--text-color-secondary); }
             .contact-form textarea {
                 resize: vertical;
