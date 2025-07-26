@@ -159,8 +159,8 @@ const GlobalStyles = () => (
                 flex-direction: column;
             }
             .about-image-container {
-                margin-bottom: 2rem; /* Changed from margin-top */
-                max-width: 100%; /* Allow full width */
+                margin: 0 auto 2rem auto; /* Center and add bottom margin */
+                max-width: 90%; /* Give some padding */
             }
             .studios-grid, .services-grid, .team-grid {
                 grid-template-columns: 1fr;
@@ -860,22 +860,28 @@ const Footer = () => (
 
 const App = () => {
     useEffect(() => {
+        let ticking = false;
+        let lastScrollY = 0;
+
         const handleScroll = () => {
-            // Disable parallax on mobile for performance
-            if (window.innerWidth > 768) {
-                const offset = window.scrollY;
-                document.body.style.backgroundPositionY = -offset * 0.5 + 'px';
-            } else {
-                document.body.style.backgroundPositionY = '0';
+            lastScrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    if (window.innerWidth > 768) {
+                        document.body.style.backgroundPositionY = `-${lastScrollY * 0.5}px`;
+                    } else {
+                        document.body.style.backgroundPositionY = '0';
+                    }
+                    ticking = false;
+                });
+                ticking = true;
             }
         };
-
-        window.addEventListener('scroll', handleScroll);
-        // Also run on resize to catch orientation changes
-        window.addEventListener('resize', handleScroll);
-
-        // Initial check
+        
+        // Initial check and setup listeners
         handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', handleScroll, { passive: true });
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
