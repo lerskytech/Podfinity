@@ -282,14 +282,14 @@ const AnimatedSection = ({ children, id, className = '' }) => {
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    // const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
     // This function will be used on the mobile nav links to close the menu upon selection
-    const handleLinkClick = () => {
-        if (isMenuOpen) {
-            setIsMenuOpen(false);
-        }
-    };
+    // const handleLinkClick = () => {
+    //     if (isMenuOpen) {
+    //         setIsMenuOpen(false);
+    //     }
+    // };
 
     return (
         <header className="header">
