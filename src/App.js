@@ -100,6 +100,80 @@ const GlobalStyles = () => (
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            .section-title {
+                font-size: 2.8rem;
+            }
+            .studios-grid, .services-grid, .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem;
+            }
+            .about-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 76px; /* Match header height */
+            }
+            .header {
+                padding: 0.5rem 1rem;
+            }
+            .logo {
+                height: 50px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .hero-title {
+                font-size: 2.2rem;
+                line-height: 1.2;
+            }
+            .hero-subtitle {
+                font-size: 1rem;
+                padding: 0.8rem 1.2rem;
+            }
+            .stats-section {
+                flex-direction: column;
+                padding: 2rem 1rem;
+                gap: 2rem;
+            }
+            .about-image-container {
+                margin-top: 2rem;
+                max-width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .studios-grid, .services-grid, .team-grid {
+                grid-template-columns: 1fr;
+            }
+            .team-member-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .team-member-info {
+                align-items: center;
+            }
+            .contact-info {
+                padding-left: 0;
+                border-left: none;
+                margin-top: 2rem;
+                text-align: center;
+            }
+        }
     `}</style>
 );
 
@@ -118,84 +192,172 @@ const AnimatedSection = ({ children, id, className = '' }) => {
 
 // --- CORE COMPONENTS ---
 
-const Header = () => (
-    <header className="header">
-        <div className="logo-container">
-            <a href="#home" className="logo-link"><img src="/NewIcon.png" alt="Podfinity Logo" className="logo" /></a>
-            <a href="#home" className="title-link"><h1>PODFINITY</h1></a>
-        </div>
-        <nav>
-            <a href="#home">HOME</a>
-            <a href="#about">ABOUT</a>
-            <a href="#studios">STUDIOS</a>
-            <a href="#services">SERVICES</a>
-            <a href="#team">TEAM</a>
-            <a href="#contact">CONTACT</a>
-        </nav>
-        <style jsx>{`
-            .header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1rem 2rem;
-                background: rgba(13, 27, 42, 0.8);
-                backdrop-filter: blur(10px);
-                z-index: 1000;
-                border-bottom: 1px solid var(--glass-border);
-            }
-            .logo-container {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
-            .logo-link { display: inline-block; line-height: 0; }
-            .logo { 
-                height: 60px; 
-                transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            }
-            .logo:hover {
-                transform: scale(1.15);
-            }
-            h1 { font-size: 1.8rem; margin: 0; }
-            .title-link {
-                color: var(--text-color);
-                text-decoration: none;
-                position: relative;
-                padding-bottom: 5px; /* space for underline */
-                transition: color 0.3s ease;
-            }
-            .title-link::after {
-                content: '';
-                position: absolute;
-                width: 0;
-                height: 2px;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: var(--accent-color);
-                transition: width 0.3s ease;
-            }
-            .title-link:hover {
-                color: var(--accent-color);
-            }
-            .title-link:hover::after {
-                width: 100%;
-            }
-            nav { display: flex; gap: 1.5rem; }
-            nav a {
-                color: var(--text-color);
-                text-decoration: none;
-                font-family: var(--font-display);
-                transition: color 0.3s;
-            }
-            nav a:hover { color: var(--accent-color); }
-        `}</style>
-    </header>
-);
+const Header = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    return (
+        <header className="header">
+            <div className="logo-container">
+                <a href="#home" className="logo-link"><img src="/NewIcon.png" alt="Podfinity Logo" className="logo" /></a>
+                <a href="#home" className="title-link"><h1>PODFINITY</h1></a>
+            </div>
+            <nav className="desktop-nav">
+                <a href="#home">HOME</a>
+                <a href="#about">ABOUT</a>
+                <a href="#studios">STUDIOS</a>
+                <a href="#services">SERVICES</a>
+                <a href="#team">TEAM</a>
+                <a href="#contact">CONTACT</a>
+            </nav>
+            <button className="mobile-menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                <div className={`hamburger ${isMenuOpen ? 'is-active' : ''}`}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+            <div className={`mobile-nav ${isMenuOpen ? 'is-open' : ''}`}>
+                <a href="#home" onClick={() => setIsMenuOpen(false)}>HOME</a>
+                <a href="#about" onClick={() => setIsMenuOpen(false)}>ABOUT</a>
+                <a href="#studios" onClick={() => setIsMenuOpen(false)}>STUDIOS</a>
+                <a href="#services" onClick={() => setIsMenuOpen(false)}>SERVICES</a>
+                <a href="#team" onClick={() => setIsMenuOpen(false)}>TEAM</a>
+                <a href="#contact" onClick={() => setIsMenuOpen(false)}>CONTACT</a>
+            </div>
+            <style jsx>{`
+                .header {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 1rem 2rem;
+                    background: rgba(13, 27, 42, 0.8);
+                    backdrop-filter: blur(10px);
+                    z-index: 1000;
+                    border-bottom: 1px solid var(--glass-border);
+                }
+                .logo-container {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+                .logo-link { display: inline-block; line-height: 0; }
+                .logo { 
+                    height: 60px; 
+                    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                }
+                .logo:hover {
+                    transform: scale(1.15);
+                }
+                h1 { font-size: 1.8rem; margin: 0; }
+                .title-link {
+                    color: var(--text-color);
+                    text-decoration: none;
+                    position: relative;
+                    padding-bottom: 5px; /* space for underline */
+                    transition: color 0.3s ease;
+                }
+                .title-link::after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: var(--accent-color);
+                    transition: width 0.3s ease;
+                }
+                .title-link:hover {
+                    color: var(--accent-color);
+                }
+                .title-link:hover::after {
+                    width: 100%;
+                }
+                nav { display: flex; gap: 1.5rem; }
+                nav a {
+                    color: var(--text-color);
+                    text-decoration: none;
+                    font-family: var(--font-display);
+                    transition: color 0.3s;
+                }
+                nav a:hover { color: var(--accent-color); }
+                .desktop-nav {
+                    display: flex; /* Show by default */
+                }
+                .mobile-menu-btn {
+                    display: none; /* Hide by default */
+                }
+                .mobile-nav {
+                    display: none; /* Hide by default */
+                }
+                @media (max-width: 1024px) { /* Adjusted breakpoint for better tablet handling */
+                    .desktop-nav {
+                        display: none;
+                    }
+                    .mobile-menu-btn {
+                        display: block;
+                        position: absolute;
+                        top: 1rem;
+                        right: 1rem;
+                        background: none;
+                        border: none;
+                        padding: 0;
+                        cursor: pointer;
+                    }
+                    .mobile-nav {
+                        display: block;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100vh;
+                        background: var(--background-color);
+                        padding: 2rem;
+                        transform: translateX(-100%);
+                        transition: transform 0.3s ease;
+                    }
+                    .mobile-nav.is-open {
+                        transform: translateX(0);
+                    }
+                    .mobile-nav a {
+                        display: block;
+                        margin-bottom: 1rem;
+                        font-size: 1.5rem;
+                        color: var(--text-color);
+                        text-decoration: none;
+                    }
+                    .mobile-nav a:hover {
+                        color: var(--accent-color);
+                    }
+                    .hamburger {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.5rem;
+                    }
+                    .hamburger span {
+                        width: 30px;
+                        height: 3px;
+                        background: var(--text-color);
+                        transition: transform 0.3s ease;
+                    }
+                    .hamburger.is-active span:nth-child(1) {
+                        transform: rotate(45deg) translate(5px, 5px);
+                    }
+                    .hamburger.is-active span:nth-child(2) {
+                        opacity: 0;
+                    }
+                    .hamburger.is-active span:nth-child(3) {
+                        transform: rotate(-45deg) translate(5px, -5px);
+                    }
+                }
+            `}</style>
+        </header>
+    );
+};
 
 const HeroSection = () => {
     const canvasRef = useRef(null);
