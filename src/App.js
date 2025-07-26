@@ -364,7 +364,7 @@ const AboutSection = () => (
         <h2 className="section-title">Veteran Owned, Community Focused</h2>
         <div className="about-content">
             <div className="about-image-container">
-                <img src="/NewVetpic.png" alt="Podfinity's veteran-focused community hub" className="about-image" />
+                <img src="/NewVetpic.jpg" alt="Podfinity studio interior" className="about-image" />
             </div>
             <div className="about-text-container">
                 <h3>Our Mission</h3>
