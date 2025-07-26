@@ -50,7 +50,11 @@ const GlobalStyles = () => (
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        html {
             scroll-behavior: smooth;
+            scroll-padding-top: 100px; /* Offset for fixed header */
         }
 
         body {
@@ -126,9 +130,6 @@ const GlobalStyles = () => (
         }
 
         @media (max-width: 768px) {
-            body {
-                padding-top: 76px; /* Match header height */
-            }
             .header {
                 padding: 0.5rem 1rem;
             }
@@ -139,7 +140,7 @@ const GlobalStyles = () => (
                 font-size: 1.5rem;
             }
             .hero-title {
-                font-size: 2.2rem;
+                font-size: 1.8rem; /* Reduced size */
                 line-height: 1.2;
             }
             .hero-subtitle {
@@ -151,11 +152,12 @@ const GlobalStyles = () => (
                 padding: 2rem 1rem;
                 gap: 2rem;
             }
+            .about-container {
+                flex-direction: column;
+            }
             .about-image-container {
-                margin-top: 2rem;
-                max-width: 80%;
-                margin-left: auto;
-                margin-right: auto;
+                margin-bottom: 2rem; /* Changed from margin-top */
+                max-width: 100%; /* Allow full width */
             }
             .studios-grid, .services-grid, .team-grid {
                 grid-template-columns: 1fr;
@@ -841,20 +843,12 @@ const Footer = () => (
 
 
 const App = () => {
-    useEffect(() => {
-        const handleScroll = () => {
-            const offset = window.scrollY;
-            document.body.style.backgroundPositionY = -offset * 0.5 + 'px';
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     return (
         <>
             <GlobalStyles />
             <Header />
-            <main>
+            <main style={{ maxWidth: '1600px', margin: '0 auto' }}>
                 <HeroSection />
                 <StatsSection />
                 <AboutSection />
