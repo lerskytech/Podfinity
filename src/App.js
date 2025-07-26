@@ -130,6 +130,9 @@ const GlobalStyles = () => (
         }
 
         @media (max-width: 768px) {
+            html {
+                scroll-padding-top: 76px; /* Match mobile header */
+            }
             .header {
                 padding: 0.5rem 1rem;
             }
@@ -845,11 +848,26 @@ const Footer = () => (
 const App = () => {
     useEffect(() => {
         const handleScroll = () => {
-            const offset = window.scrollY;
-            document.body.style.backgroundPositionY = -offset * 0.5 + 'px';
+            // Disable parallax on mobile for performance
+            if (window.innerWidth > 768) {
+                const offset = window.scrollY;
+                document.body.style.backgroundPositionY = -offset * 0.5 + 'px';
+            } else {
+                document.body.style.backgroundPositionY = '0';
+            }
         };
+
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        // Also run on resize to catch orientation changes
+        window.addEventListener('resize', handleScroll);
+
+        // Initial check
+        handleScroll();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', handleScroll);
+        };
     }, []);
 
     return (
