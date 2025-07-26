@@ -448,6 +448,28 @@ const Header = () => {
                     }
                 }
 
+
+
+                .nav-link {
+                    color: var(--text-color);
+                    text-decoration: none;
+                    font-weight: 500;
+                    padding: 0.6rem 1.2rem;
+                    border-radius: 50px; /* Pill shape */
+                    position: relative;
+                    transition: all 0.3s ease;
+                    background-color: transparent;
+                    border: 1px solid transparent;
+                }
+
+                .nav-link:hover {
+                    color: var(--accent-color-light);
+                    background-color: rgba(255, 255, 255, 0.08);
+                    border-color: rgba(255, 255, 255, 0.2);
+                    box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.4);
+                    transform: translateY(-2px);
+                }
+
                 .title-link {
                     color: var(--text-color);
                     text-decoration: none;
