@@ -52,6 +52,11 @@ const GlobalStyles = () => (
             padding: 0;
         }
 
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px; /* Match header height */
+        }
+
         html, body {
             margin: 0;
             padding: 0;
