@@ -281,6 +281,15 @@ const AnimatedSection = ({ children, id, className = '' }) => {
 
 const Header = () => {
     const [isFlipped, setIsFlipped] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+    const handleLinkClick = () => {
+        if (isMenuOpen) {
+            setIsMenuOpen(false);
+        }
+    };
 
     const handleIconClick = () => {
         setIsFlipped(prev => !prev);
@@ -309,13 +318,22 @@ const Header = () => {
                 <a href="#services" className="nav-link">SERVICES</a>
                 <a href="#team" className="nav-link">TEAM</a>
                 <a href="#contact" className="nav-link">CONTACT</a>
-                <a href="#home">HOME</a>
-                <a href="#about">ABOUT</a>
-                <a href="#studios">STUDIOS</a>
-                <a href="#services">SERVICES</a>
-                <a href="#team">TEAM</a>
-                <a href="#contact">CONTACT</a>
             </div>
+            <div className="mobile-menu-icon" onClick={toggleMenu}>
+                <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
+                <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
+                <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
+            </div>
+            {isMenuOpen && (
+                <div className="mobile-nav-links open">
+                    <a href="#home" onClick={handleLinkClick}>HOME</a>
+                    <a href="#about" onClick={handleLinkClick}>ABOUT</a>
+                    <a href="#studios" onClick={handleLinkClick}>STUDIOS</a>
+                    <a href="#services" onClick={handleLinkClick}>SERVICES</a>
+                    <a href="#team" onClick={handleLinkClick}>TEAM</a>
+                    <a href="#contact" onClick={handleLinkClick}>CONTACT</a>
+                </div>
+            )}
             <style jsx>{`
                 .header {
                     position: fixed;
@@ -350,6 +368,81 @@ const Header = () => {
                     transform: scale(1.15);
                 }
                 h1 { font-size: 1.8rem; margin: 0; }
+
+                .mobile-menu-icon {
+                    display: none; /* Hidden on desktop */
+                    cursor: pointer;
+                    width: 30px;
+                    height: 22px;
+                    position: relative;
+                    z-index: 1001; /* Above mobile nav */
+                }
+
+                .bar {
+                    width: 100%;
+                    height: 3px;
+                    background-color: var(--text-color);
+                    border-radius: 2px;
+                    transition: all 0.3s ease-in-out;
+                    position: absolute;
+                }
+
+                .bar:nth-child(1) { top: 0; }
+                .bar:nth-child(2) { top: 50%; transform: translateY(-50%); }
+                .bar:nth-child(3) { bottom: 0; }
+
+                .bar.open:nth-child(1) {
+                    top: 50%;
+                    transform: translateY(-50%) rotate(45deg);
+                }
+                .bar.open:nth-child(2) {
+                    opacity: 0;
+                }
+                .bar.open:nth-child(3) {
+                    bottom: 50%;
+                    transform: translateY(50%) rotate(-45deg);
+                }
+
+                .mobile-nav-links {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    position: fixed;
+                    top: 0;
+                    right: -100%; /* Start off-screen */
+                    width: 70%;
+                    max-width: 300px;
+                    height: 100vh;
+                    background: var(--glass-bg);
+                    backdrop-filter: blur(15px);
+                    border-left: 1px solid var(--glass-border);
+                    transition: right 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+                    z-index: 1000;
+                    padding-top: 80px; /* Space for header */
+                    gap: 2rem;
+                }
+
+                .mobile-nav-links.open {
+                    right: 0; /* Slide in */
+                }
+
+                .mobile-nav-links a {
+                    color: var(--text-color);
+                    text-decoration: none;
+                    font-size: 1.5rem;
+                    font-weight: 500;
+                }
+
+                @media (max-width: 850px) {
+                    .desktop-nav {
+                        display: none;
+                    }
+                    .mobile-menu-icon {
+                        display: block;
+                    }
+                }
+
                 .title-link {
                     color: var(--text-color);
                     text-decoration: none;
