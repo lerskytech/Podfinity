@@ -54,7 +54,7 @@ const GlobalStyles = () => (
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 100px; /* Offset for fixed header */
+            scroll-padding-top: 92px; /* Offset for fixed header */
         }
 
         body {
@@ -843,6 +843,14 @@ const Footer = () => (
 
 
 const App = () => {
+    useEffect(() => {
+        const handleScroll = () => {
+            const offset = window.scrollY;
+            document.body.style.backgroundPositionY = -offset * 0.5 + 'px';
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     return (
         <>
