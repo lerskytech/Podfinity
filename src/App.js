@@ -133,6 +133,73 @@ const GlobalStyles = () => (
             html {
                 scroll-padding-top: 80px; /* Match mobile header */
             }
+
+            .section-title {
+                font-size: 2.2rem;
+                margin-bottom: 2rem;
+            }
+
+            .animated-section {
+                padding: 3rem 1rem;
+            }
+
+            .hero-content {
+                padding: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.9rem;
+                width: 90%;
+            }
+
+            .stat-item h3 {
+                font-size: 2rem;
+            }
+
+            .stat-item p {
+                font-size: 0.9rem;
+            }
+
+            .about-text h3 {
+                font-size: 1.5rem;
+            }
+
+            .about-text p {
+                font-size: 0.95rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .card h3 {
+                font-size: 1.3rem;
+            }
+
+            .card p {
+                font-size: 0.9rem;
+            }
+
+            .team-member-card {
+                padding: 1rem;
+            }
+
+            .contact-form-container {
+                padding: 1.5rem;
+            }
+
+            .contact-info h3 {
+                font-size: 1.5rem;
+            }
+
+            .footer-content {
+                padding: 0 1rem;
+            }
+
             .header {
                 padding: 0.5rem 1rem;
             }
