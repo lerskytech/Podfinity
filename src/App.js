@@ -155,7 +155,7 @@ const Header = () => (
             .logo-link { display: inline-block; line-height: 0; }
             .logo { 
                 height: 60px; 
-                transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+                transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
             .logo:hover {
                 transform: scale(1.15);
