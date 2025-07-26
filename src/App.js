@@ -281,7 +281,6 @@ const AnimatedSection = ({ children, id, className = '' }) => {
 
 const Header = () => {
     const [isFlipped, setIsFlipped] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleIconClick = () => {
         setIsFlipped(prev => !prev);
