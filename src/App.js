@@ -1,1700 +1,681 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
 
-// Global Styles and Animations
-const globalStyles = `
-  /* Base Styles */
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap');
+// --- MOCK DATA ---
 
-  body {
-    background-color: #00050a; /* Deep space blue */
-    color: #f0f0f0;
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    scroll-behavior: smooth;
-  }
+const placeholderSvg = "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'%3e%3c/path%3e%3ccircle cx='12' cy='7' r='4'%3e%3c/circle%3e%3c/svg%3e";
 
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-  }
+const teamMembers = [
+    { name: "Marty", role: "CEO", image: placeholderSvg },
+    { name: "Pete", role: "Founder & Owner", image: placeholderSvg },
+    { name: "Skyler", role: "Podcast Producer", image: placeholderSvg },
+    { name: "Christian", role: "Media Manager", image: placeholderSvg },
+    { name: "Marty", role: "Podcast Host", image: placeholderSvg },
+];
 
-  @keyframes fadeInLeft {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
+const services = [
+    { icon: '🎙️', title: 'High-Fidelity Recording', description: 'Capture crystal-clear audio in our acoustically treated studios with state-of-the-art microphones and mixing boards.' },
+    { icon: '🎬', title: 'Video Podcasting', description: 'Produce professional 4K video podcasts with our multi-camera setups, dynamic lighting, and green screen capabilities.' },
+    { icon: '✂️', title: 'Post-Production', description: 'Our expert audio engineers will edit, mix, and master your content, ensuring a polished, broadcast-quality final product.' },
+    { icon: '🚀', title: 'Distribution & Marketing', description: 'We help you launch your podcast on all major platforms and provide strategies to grow your audience.' },
+];
 
-  @keyframes fadeInRight {
-    from { opacity: 0; transform: translateX(20px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-  
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+const testimonials = [
+    { quote: "Podfinity transformed our message. The quality is unmatched, and the team's expertise is evident in every episode. Truly a world-class operation.", author: "CEO, Veteran's Outreach Project" },
+    { quote: "As a local business owner, I needed a professional edge. Podfinity delivered. Their studio and staff are top-tier. Highly recommend.", author: "Founder, Boca Business Spotlight" },
+    { quote: "The best podcasting experience in Florida. From the equipment to the environment, everything at Podfinity is designed for excellence.", author: "Host, The Florida Insider" },
+];
 
-  /* Responsive Design */
-  .nav-links {
-    display: flex;
-    align-items: center;
-  }
-  .nav-toggle {
-    display: none;
-  }
+// --- STYLED COMPONENTS & HELPERS ---
 
-  /* Tablet and smaller */
-  @media (max-width: 992px) {
-    .nav-links {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 80px;
-      right: 0;
-      background-color: rgba(0, 5, 10, 0.95);
-      width: 100%;
-      padding: 20px 0;
-    }
-    .nav-links.active {
-      display: flex;
-    }
-    .nav-links a {
-      margin: 10px 0;
-      text-align: center;
-    }
-    .nav-toggle {
-      display: block;
-      background: none;
-      border: none;
-      color: #f0f0f0;
-      font-size: 2rem;
-      cursor: pointer;
-    }
-    #about {
-      grid-template-columns: 1fr !important;
-    }
-    .contact-grid,
-    .studios-grid,
-    .services-grid,
-    .team-grid,
-    .podcasts-grid {
-        grid-template-columns: 1fr;
-    }
-    .testimonial-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    .footer-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-    .footer-grid > div {
-        margin-bottom: 20px;
-    }
-  }
+const GlobalStyles = () => (
+    <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@400;700&display=swap');
 
-  /* Mobile */
-  @media (max-width: 768px) {
-    .hero-title {
-      font-size: 2.5rem !important;
-    }
-    .hero-subtitle {
-      font-size: 1.2rem !important;
-    }
-    .stats-section {
-      flex-direction: column;
-      gap: 30px;
-    }
-  }
-`;
+        :root {
+            --background-color: #0D1B2A;
+            --primary-color: #1B263B;
+            --secondary-color: #415A77;
+            --accent-color: #778DA9;
+            --accent-color-rgb: 119, 141, 169;
+            --text-color: #E0E1DD;
+            --text-color-secondary: #B0B3B8;
+            --glass-bg: rgba(27, 38, 59, 0.5);
+            --glass-border: rgba(65, 90, 119, 0.5);
+            --font-main: 'Roboto', sans-serif;
+            --font-display: 'Orbitron', sans-serif;
+        }
 
-// Helper component for smooth scrolling to sections
-const ScrollToSection = () => {
-  const { hash } = useLocation();
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
 
-  useEffect(() => {
-    if (hash) {
-      const id = hash.replace('#', '');
-      const element = document.getElementById(id);
-      if (element) {
-        const headerOffset = 95; // Height of fixed header + desired space
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        body {
+            font-family: var(--font-main);
+            background: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            position: relative;
+        }
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth"
-        });
-      }
-    } else {
-      // Scroll to top on initial load or when hash is empty
-      window.scrollTo(0, 0);
-    }
-  }, [hash]);
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, rgba(13, 27, 42, 0) 0%, var(--background-color) 80%);
+            z-index: -1;
+        }
 
-  return null;
+        main {
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 900;
+            color: var(--accent-color);
+        }
+        
+        .animated-section {
+            padding: 5rem 2rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            background: transparent;
+        }
+
+        .animated-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    `}</style>
+);
+
+const AnimatedSection = ({ children, id, className = '' }) => {
+    const { ref, inView } = useInView({
+        triggerOnce: true,
+        threshold: 0.1,
+    });
+
+    return (
+        <section ref={ref} id={id} className={`animated-section ${className} ${inView ? 'is-visible' : ''}`}>
+            {children}
+        </section>
+    );
 };
 
-// Mock Data
-const podcastsData = [
-    {
-        title: "Veteran Voices",
-        host: "with Marty Strong",
-        image: "/Veteran-Voices.jpg",
-        description: "In-depth conversations with veterans from all walks of life, sharing their stories of service, sacrifice, and success after the uniform."
-    },
-    {
-        name: "Boca Business Spotlight",
-        host: "with Pete Rodriguez",
-        image: "/Boca-Business-Spotlight.jpg",
-        description: "Pete sits down with local entrepreneurs and business leaders in Boca Raton to discuss their journey, challenges, and keys to success."
-    }
-];
+// --- CORE COMPONENTS ---
 
-const teamData = [
-    {
-        name: "Marty Strong",
-        role: "CEO",
-        image: "/MartyStrong.jpg",
-        bio: "A seasoned leader and military veteran, Marty drives the strategic vision of Podfinity, ensuring excellence and operational discipline."
-    },
-    {
-        name: "Pete Rodriguez",
-        role: "Founder & Owner",
-        image: "/PeteRodriguez.jpg",
-        bio: "The heart of Podfinity. Pete's passion for audio and his veteran roots inspired the mission to give every voice a platform."
-    },
-    {
-        name: "Jessica Chen",
-        role: "Head of Production",
-        image: "/jessica-chen.jpg",
-        bio: "With a decade of experience in audio engineering, Jessica leads our production team, guaranteeing broadcast-quality sound."
-    },
-    {
-        name: "David Carter",
-        role: "Marketing Director",
-        image: "/david-carter.jpg",
-        bio: "David is a digital marketing guru who helps our clients grow their audience and monetize their content effectively."
-    }
-];
-
-const servicesData = [
-    {
-        title: "Audio & Video Recording",
-        description: "Capture crystal-clear audio and 4K video in our sound-treated, professional studios.",
-        icon: "🎤"
-    },
-    {
-        title: "Post-Production",
-        description: "Expert editing, mixing, and mastering to make your podcast sound polished and professional.",
-        icon: "🎧"
-    },
-    {
-        title: "Distribution & Hosting",
-        description: "Seamless publishing to all major podcast platforms, including Spotify, Apple, and Google Podcasts.",
-        icon: "🚀"
-    },
-    {
-        title: "Show Notes & Transcription",
-        description: "We create detailed show notes and accurate transcriptions to improve SEO and accessibility.",
-        icon: "📝"
-    },
-    {
-        title: "Marketing & Promotion",
-        description: "Strategic guidance and asset creation to help you grow your audience and build a community.",
-        icon: "📈"
-    },
-    {
-        title: "Consulting & Strategy",
-        description: "From concept to launch, our experts provide the guidance you need to create a successful show.",
-        icon: "💡"
-    }
-];
-
-const studioData = [
-    {
-        name: "Studio A: The Flagship",
-        image: "/studio-a.jpg",
-        description: "Our premier recording suite, equipped with industry-leading technology for up to 4 hosts. Perfect for flagship shows and roundtable discussions.",
-        specs: ["4+ Person Setup", "4K Video Capability", "Live-Streaming Ready"]
-    },
-    {
-        name: "Studio B: The Workhorse",
-        image: "/studio-b.jpg",
-        description: "A versatile and professional space designed for solo creators or 2-person interviews. All the quality, in a more intimate setting.",
-        specs: ["1-2 Person Setup", "Pristine Audio", "Comfort-Focused"]
-    },
-    {
-        name: "Studio C: The Content Creator",
-        image: "/studio-c.jpg",
-        description: "Optimized for solo remote recordings, voice-overs, and audiobook narration. Your dedicated space for focused content creation.",
-        specs: ["Solo Recording", "Sound-Treated Booth", "Remote Guest Integration"]
-    }
-];
-
-// Error Boundary Component
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
-    console.error("Uncaught error:", error, errorInfo);
-    this.setState({ error: error, errorInfo: errorInfo });
-  }
-
-  render() {
-    if (this.state.hasError) {
-      // You can render any custom fallback UI
-      return (
-        <div style={{ padding: '20px', color: 'red' }}>
-          <h2>Something went wrong.</h2>
-          <details style={{ whiteSpace: 'pre-wrap' }}>
-            {this.state.error && this.state.error.toString()}
-            <br />
-            {this.state.errorInfo && this.state.errorInfo.componentStack}
-          </details>
+const Header = () => (
+    <header className="header">
+        <div className="logo-container">
+            <a href="#home" className="logo-link"><img src="/NewIcon.png" alt="Podfinity Logo" className="logo" /></a>
+            <h1>PODFINITY</h1>
         </div>
-      );
-    }
-
-    return this.props.children; 
-  }
-}
-
-const mockTestimonials = [
-    {
-        name: "Local Veteran Group",
-        role: "Community Partner",
-        quote: "Podfinity gave our stories a platform and a voice. Their commitment to the veteran community is real and deeply appreciated. The quality is second to none.",
-        image: "/non-profit-logo.jpg"
-    },
-    {
-        name: "Boca Chamber of Commerce",
-        role: "Business Partner",
-        quote: "A world-class production studio right here in Boca. Pete and his team are true professionals who are invested in local success.",
-        image: "/boca-chamber-logo.jpg"
-    }
-];
-
-// Components
-const AnimatedSection = ({ children, threshold = 0.1 }) => {
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold,
-  });
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(30px)',
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-const Header = () => {
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const { pathname, hash } = useLocation();
-  const currentPath = hash || pathname;
-
-  const getLinkStyle = (path) => ({
-    color: '#f0f0f0',
-    textDecoration: 'none',
-    margin: '0 15px',
-    fontFamily: "'Orbitron', sans-serif",
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    fontSize: '1rem',
-    transition: 'color 0.3s ease, text-shadow 0.3s ease',
-    ...(currentPath === path && { color: '#ff6600', textShadow: '0 0 8px rgba(255, 102, 0, 0.7)' })
-  });
-
-  return (
-    <header style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '15px 30px',
-      backgroundColor: 'rgba(0, 5, 10, 0.8)',
-      backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid rgba(255, 102, 0, 0.2)',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 1000,
-      height: '65px'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <img src="/PodfinityLogo.png" alt="Podfinity Logo" style={{ height: '50px', marginRight: '20px' }} />
-        <span style={{
-          fontFamily: "'Orbitron', sans-serif",
-          fontSize: '1.8rem',
-          fontWeight: 'bold',
-          color: '#f0f0f0',
-          letterSpacing: '2px'
-        }}>PODFINITY</span>
-      </div>
-            <nav>
-        <div className={`nav-links ${isNavOpen ? 'active' : ''}`}>
-          <Link to="/#home" style={getLinkStyle('#home')} onClick={() => setIsNavOpen(false)}>Home</Link>
-          <Link to="/#about" style={getLinkStyle('#about')} onClick={() => setIsNavOpen(false)}>About</Link>
-          <Link to="/#studios" style={getLinkStyle('#studios')} onClick={() => setIsNavOpen(false)}>Studios</Link>
-          <Link to="/#podcasts" style={getLinkStyle('#podcasts')} onClick={() => setIsNavOpen(false)}>Podcasts</Link>
-          <Link to="/#services" style={getLinkStyle('#services')} onClick={() => setIsNavOpen(false)}>Services</Link>
-          <Link to="/#team" style={getLinkStyle('#team')} onClick={() => setIsNavOpen(false)}>Team</Link>
-          <Link to="/#contact" style={getLinkStyle('#contact')} onClick={() => setIsNavOpen(false)}>Contact</Link>
-        </div>
-        <button className="nav-toggle" onClick={() => setIsNavOpen(!isNavOpen)}>
-          {isNavOpen ? '✕' : '☰'}
-        </button>
-      </nav>
+        <nav>
+            <a href="#home">HOME</a>
+            <a href="#about">ABOUT</a>
+            <a href="#studios">STUDIOS</a>
+            <a href="#services">SERVICES</a>
+            <a href="#team">TEAM</a>
+            <a href="#contact">CONTACT</a>
+        </nav>
+        <style jsx>{`
+            .header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 2rem;
+                background: rgba(13, 27, 42, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                border-bottom: 1px solid var(--glass-border);
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            .logo-link { display: inline-block; line-height: 0; }
+            .logo { 
+                height: 60px; 
+                transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            }
+            .logo:hover {
+                transform: scale(1.15);
+            }
+            h1 { font-size: 1.8rem; }
+            nav { display: flex; gap: 1.5rem; }
+            nav a {
+                color: var(--text-color);
+                text-decoration: none;
+                font-family: var(--font-display);
+                transition: color 0.3s;
+            }
+            nav a:hover { color: var(--accent-color); }
+        `}</style>
     </header>
-  );
-};
+);
 
-const Footer = () => {
-  const footerStyle = {
-    backgroundColor: '#00050a',
-    color: '#f0f0f0',
-    padding: '40px',
-    borderTop: '1px solid rgba(255, 102, 0, 0.2)'
-  };
-  const gridStyle = {
-    display: 'grid',
-    gridTemplateColumns: '2fr 1fr 1fr',
-    gap: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto'
-  };
-  const linkStyle = { color: '#ff6600', textDecoration: 'none', margin: '0 10px' };
+const HeroSection = () => {
+    const canvasRef = useRef(null);
 
-  return (
-    <footer style={footerStyle}>
-      <div className="footer-grid" style={gridStyle}>
-        <div>
-          <h4 style={{fontFamily: "'Orbitron', sans-serif", color: '#ff6600'}}>PODFINITY</h4>
-          <p>Boca Raton's Premier Veteran-Owned Podcast Studio.</p>
-        </div>
-        <div>
-          <h4 style={{fontFamily: "'Orbitron', sans-serif", color: '#ff6600'}}>Quick Links</h4>
-          <ul style={{listStyle: 'none', padding: 0}}>
-            <li><a href="#about" style={{color: '#f0f0f0', textDecoration: 'none'}}>About</a></li>
-            <li><a href="#services" style={{color: '#f0f0f0', textDecoration: 'none'}}>Services</a></li>
-            <li><a href="#team" style={{color: '#f0f0f0', textDecoration: 'none'}}>Team</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 style={{fontFamily: "'Orbitron', sans-serif", color: '#ff6600'}}>Contact</h4>
-          <p>contact@podfinity.com</p>
-          <p>(561) 555-1234</p>
-        </div>
-      </div>
-      <div style={{textAlign: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px solid rgba(255, 102, 0, 0.1)'}}>
-        <p>&copy; 2024 Podfinity. All Rights Reserved.</p>
-      </div>
-    </footer>
-  );
-};
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = 700;
+        let points;
+        let mouse = { x: width / 2, y: height / 2, active: false };
 
-const Contact = () => {
-  const sectionStyle = { 
-    paddingTop: '95px', 
-    paddingBottom: '60px', 
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-  };
-  const containerStyle = {
-    maxWidth: '1000px',
-    margin: '0 auto',
-    padding: '0 40px',
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '50px',
-    alignItems: 'flex-start'
-  };
-  const inputStyle = {
-    width: '100%',
-    padding: '12px',
-    marginBottom: '20px',
-    backgroundColor: 'rgba(0, 5, 10, 0.7)',
-    border: '1px solid rgba(255, 102, 0, 0.3)',
-    borderRadius: '5px',
-    color: '#f0f0f0',
-    boxSizing: 'border-box'
-  };
-  const buttonStyle = {
-    backgroundColor: '#ff6600',
-    color: '#00050a',
-    border: 'none',
-    padding: '15px 30px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    fontFamily: "'Orbitron', sans-serif",
-    width: '100%',
-    fontSize: '1rem',
-    textTransform: 'uppercase'
-  };
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseX = x;
+                this.baseY = y;
+                this.radius = 5 + Math.random() * 5;
+                this.density = Math.random() * 10 + 20;
+                this.color = `rgba(119, 141, 169, ${Math.random() * 0.5 + 0.2})`;
+            }
 
-  return (
-    <section id="contact" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600', textAlign: 'center', marginBottom: '40px' }}>GET IN TOUCH</h2>
-      <div className="contact-grid" style={containerStyle}>
-        <div>
-          <h3 style={{fontFamily: "'Orbitron', sans-serif"}}>Send Us a Message</h3>
-          <form onSubmit={e => e.preventDefault()}>
-            <input type="text" placeholder="Your Name" style={inputStyle} />
-            <input type="email" placeholder="Your Email" style={inputStyle} />
-            <textarea placeholder="Your Message" rows="6" style={{...inputStyle, resize: 'vertical'}}></textarea>
-            <button type="submit" style={buttonStyle}>Send Message</button>
-          </form>
-        </div>
-        <div>
-          <h3 style={{fontFamily: "'Orbitron', sans-serif"}}>Contact Information</h3>
-          <p style={{lineHeight: 1.8}}>
-            <strong>Address:</strong><br/>
-            123 Victory Lane<br/>
-            Boca Raton, FL 33431
-          </p>
-          <p style={{lineHeight: 1.8}}>
-            <strong>Email:</strong><br/>
-            <a href="mailto:contact@podfinity.com" style={{color: '#ff6600', textDecoration: 'none'}}>contact@podfinity.com</a>
-          </p>
-          <p style={{lineHeight: 1.8}}>
-            <strong>Phone:</strong><br/>
-            (561) 555-1234
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-};
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                let forceX = dx / dist;
+                let forceY = dy / dist;
+                let maxDist = 200;
+                let force = (maxDist - dist) / maxDist;
 
-const Podcasts = () => {
-  const sectionStyle = { paddingTop: '95px', paddingBottom: '60px', textAlign: 'center', backgroundColor: '#00050a' };
-  const cardContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 400px))',
-    gap: '40px',
-    padding: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    justifyContent: 'center'
-  };
-  const cardStyle = {
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    borderRadius: '10px',
-    padding: '0',
-    textAlign: 'center',
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column'
-  };
+                if (force < 0 || !mouse.active) force = 0;
 
-  return (
-    <section id="podcasts" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>FEATURED PODCASTS</h2>
-      <div className="podcasts-grid" style={cardContainerStyle}>
-        {podcastsData.map((podcast, index) => (
-          <div key={index} style={cardStyle}>
-            <img src={podcast.image} alt={podcast.title} style={{ width: '100%', height: 'auto' }} />
-            <div style={{ padding: '20px' }}>
-              <h3 style={{ fontFamily: "'Orbitron', sans-serif", color: '#ff6600' }}>{podcast.title || podcast.name}</h3>
-              <p style={{ fontWeight: 'bold', color: 'rgba(240, 240, 240, 0.8)', marginTop: '-10px' }}>{podcast.host}</p>
-              <p style={{ lineHeight: '1.6' }}>{podcast.description}</p>
-              <button style={{
-                backgroundColor: 'transparent',
-                color: '#ff6600',
-                border: '2px solid #ff6600',
-                padding: '10px 20px',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontFamily: "'Orbitron', sans-serif",
-                marginTop: '15px',
-                transition: 'background-color 0.3s, color 0.3s'
-              }}>Listen Now</button>
+                let dirX = (forceX * force * this.density);
+                let dirY = (forceY * force * this.density);
+
+                this.x = this.baseX - dirX;
+                this.y = this.baseY - dirY;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            points = [];
+            let gap = 40;
+            for (let x = 0; x < width; x += gap) {
+                for (let y = 0; y < height; y += gap) {
+                    points.push(new Point(x + Math.random() * gap, y + Math.random() * gap));
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < points.length; i++) {
+                points[i].update();
+                points[i].draw();
+            }
+            connect();
+            requestAnimationFrame(animate);
+        }
+
+        function connect() {
+            for (let i = 0; i < points.length; i++) {
+                for (let j = i; j < points.length; j++) {
+                    let dx = points[i].x - points[j].x;
+                    let dy = points[i].y - points[j].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 60) {
+                        ctx.strokeStyle = `rgba(119, 141, 169, ${1 - dist / 60})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(points[i].x, points[i].y);
+                        ctx.lineTo(points[j].x, points[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        const handleMouseMove = (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.active = true;
+        };
+
+        const handleMouseLeave = () => {
+            mouse.active = false;
+        };
+        
+        const handleResize = () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = 700;
+            init();
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseleave', handleMouseLeave);
+        window.addEventListener('resize', handleResize);
+
+        init();
+        animate();
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseleave', handleMouseLeave);
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return (
+        <section id="home" className="hero-section">
+            <canvas ref={canvasRef} className="hero-canvas"></canvas>
+            <div className="hero-content">
+                <h2 className="hero-title">Where Your Voice Finds Its Power</h2>
+                <p className="hero-subtitle">State-of-the-Art Podcast Studios in Boca Raton for Veterans, First Responders, and Visionaries</p>
             </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+            <style jsx>{`
+                .hero-section {
+                    height: 700px;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                }
+                .hero-canvas {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+                }
+                .hero-content {
+                    position: relative;
+                    z-index: 2;
+                    padding: 2rem;
+                    background: var(--glass-bg);
+                    border: 1px solid var(--glass-border);
+                    backdrop-filter: blur(5px);
+                    border-radius: 10px;
+                }
+                .hero-title { font-size: 4rem; margin-bottom: 1rem; }
+                .hero-subtitle { font-size: 1.5rem; color: var(--text-color-secondary); }
+            `}</style>
+        </section>
+    );
 };
 
-const Team = () => {
-  const sectionStyle = { paddingTop: '95px', paddingBottom: '60px', textAlign: 'center' };
-  const cardContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 350px))',
-    gap: '30px',
-    padding: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    justifyContent: 'center'
-  };
-  const cardStyle = {
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    borderRadius: '10px',
-    padding: '20px',
-    textAlign: 'center',
-  };
-
-  return (
-    <section id="team" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>MEET THE TEAM</h2>
-      <div className="team-grid" style={cardContainerStyle}>
-        {teamData.map((member, index) => (
-          <div key={index} style={cardStyle}>
-            <img src={member.image} alt={member.name} style={{ width: '150px', height: '150px', borderRadius: '50%', marginBottom: '15px', border: '3px solid #ff6600', objectFit: 'cover' }} />
-            <h3 style={{ fontFamily: "'Orbitron', sans-serif", color: '#ff6600' }}>{member.name}</h3>
-            <p style={{ fontWeight: 'bold', color: 'rgba(240, 240, 240, 0.8)' }}>{member.role}</p>
-            <p style={{ lineHeight: '1.6', fontSize: '0.9rem' }}>{member.bio}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-
-const Services = () => {
-  const sectionStyle = { paddingTop: '95px', paddingBottom: '60px', textAlign: 'center', backgroundColor: '#00050a' };
-  const cardContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 400px))',
-    gap: '30px',
-    padding: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    justifyContent: 'center'
-  };
-  const cardStyle = {
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    borderRadius: '10px',
-    padding: '30px',
-    textAlign: 'center',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-  };
-
-  return (
-    <section id="services" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>OUR SERVICES</h2>
-      <div className="services-grid" style={cardContainerStyle}>
-        {servicesData.map((service, index) => (
-          <div key={index} style={cardStyle}
-               onMouseEnter={e => {
-                 e.currentTarget.style.transform = 'translateY(-10px)';
-                 e.currentTarget.style.boxShadow = '0 10px 20px rgba(255, 102, 0, 0.2)';
-               }}
-               onMouseLeave={e => {
-                 e.currentTarget.style.transform = 'translateY(0px)';
-                 e.currentTarget.style.boxShadow = 'none';
-               }}>
-            <div style={{ fontSize: '3rem', marginBottom: '15px' }}>{service.icon}</div>
-            <h3 style={{ fontFamily: "'Orbitron', sans-serif", color: '#ff6600' }}>{service.title}</h3>
-            <p style={{ lineHeight: '1.6' }}>{service.description}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-
-const Studios = () => {
-  const sectionStyle = { paddingTop: '95px', paddingBottom: '60px', textAlign: 'center' };
-  const cardContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 400px))',
-    gap: '30px',
-    padding: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    justifyContent: 'center'
-  };
-  const cardStyle = {
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    borderRadius: '10px',
-    overflow: 'hidden',
-    textAlign: 'left',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    display: 'flex',
-    flexDirection: 'column'
-  };
-  const buttonStyle = {
-    backgroundColor: 'transparent',
-    color: '#ff6600',
-    border: '2px solid #ff6600',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    fontFamily: "'Orbitron', sans-serif",
-    marginTop: 'auto',
-    transition: 'background-color 0.3s, color 0.3s'
-  };
-
-  return (
-    <section id="studios" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>OUR STUDIOS</h2>
-      <div className="studios-grid" style={cardContainerStyle}>
-        {studioData.map((studio, index) => (
-          <div key={index} style={cardStyle} 
-               onMouseEnter={e => {
-                 e.currentTarget.style.transform = 'translateY(-10px)';
-                 e.currentTarget.style.boxShadow = '0 10px 20px rgba(255, 102, 0, 0.2)';
-               }}
-               onMouseLeave={e => {
-                 e.currentTarget.style.transform = 'translateY(0px)';
-                 e.currentTarget.style.boxShadow = 'none';
-               }}>
-            <img src={studio.image} alt={studio.name} style={{ width: '100%', height: 'auto' }} />
-            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-              <h3 style={{ fontFamily: "'Orbitron', sans-serif", color: '#ff6600', marginTop: '0' }}>{studio.name}</h3>
-              <p>{studio.description}</p>
-              <ul style={{ paddingLeft: '20px', marginBottom: '20px' }}>
-                {studio.specs.map((spec, i) => <li key={i}>{spec}</li>)}
-              </ul>
-              <button style={buttonStyle} 
-                      onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#ff6600'; e.currentTarget.style.color = '#00050a'; }} 
-                      onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#ff6600'; }}>
-                Book Now
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-  const TestimonialCarousel = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const nextSlide = () => {
-    setActiveIndex((current) => (current === mockTestimonials.length - 1 ? 0 : current + 1));
-  };
-
-  const prevSlide = () => {
-    setActiveIndex((current) => (current === 0 ? mockTestimonials.length - 1 : current - 1));
-  };
-
-  const carouselStyle = {
-    position: 'relative',
-    maxWidth: '800px',
-    margin: '95px auto',
-    overflow: 'hidden',
-    borderRadius: '10px',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    padding: '40px 60px'
-  };
-
-  const slideStyle = {
-    textAlign: 'center',
-    fontStyle: 'italic',
-    fontSize: '1.2rem',
-    lineHeight: '1.6'
-  };
-
-  const arrowStyle = {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    background: 'rgba(255, 255, 255, 0.1)',
-    border: 'none',
-    color: '#ff6600',
-    fontSize: '2rem',
-    cursor: 'pointer',
-    padding: '10px',
-    borderRadius: '50%',
-    zIndex: 1000
-  };
-
-  return (
-    <section id="testimonials" style={{ paddingTop: '95px', paddingBottom: '60px' }}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600', textAlign: 'center' }}>WHAT OUR CLIENTS SAY</h2>
-      <div style={carouselStyle}>
-        <div style={slideStyle}>
-          <p>"{mockTestimonials[activeIndex].quote}"</p>
-          <div>
-            <p style={{ fontWeight: 'bold', color: '#ff6600' }}>- {mockTestimonials[activeIndex].name}, {mockTestimonials[activeIndex].role}</p>
-          </div>
+const StatsSection = () => (
+    <div className="stats-section">
+        <div className="stat-item">
+            <h3>1,200+</h3>
+            <p>Episodes Produced</p>
         </div>
-        <button onClick={prevSlide} style={{ ...arrowStyle, left: '10px' }}>&#10094;</button>
-        <button onClick={nextSlide} style={{ ...arrowStyle, right: '10px' }}>&#10095;</button>
-      </div>
-    </section>
-  );
-};
-
-const Hero = () => {
-  const heroStyle = {
-    height: 'calc(100vh - 95px)',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    padding: '0 20px',
-    background: 'url(/PodfinityHero.jpg) no-repeat center center/cover',
-    marginTop: '95px' // Offset for fixed header
-  };
-
-  return (
-    <section id="home" style={heroStyle}>
-      <div style={{
-        backgroundColor: 'rgba(0, 5, 10, 0.7)',
-        padding: '20px 40px',
-        borderRadius: '10px',
-        backdropFilter: 'blur(5px)',
-        border: '1px solid rgba(255, 102, 0, 0.3)',
-        animation: 'fadeInUp 1s 0.5s backwards'
-      }}>
-        <h1 className="hero-title" style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '4rem', margin: 0, color: '#ff6600' }}>FIND YOUR VOICE</h1>
-        <p className="hero-subtitle" style={{ fontSize: '1.5rem' }}>Boca Raton's Premier Veteran-Owned Podcast Studio</p>
-      </div>
-    </section>
-  );
-};
-
-const StatsSection = () => {
-  const statsSectionStyle = {
-    display: 'flex',
-    justifyContent: 'space-around',
-    padding: '40px',
-    backgroundColor: 'rgba(0, 5, 10, 0.5)',
-    borderTop: '1px solid rgba(255, 102, 0, 0.2)',
-    borderBottom: '1px solid rgba(255, 102, 0, 0.2)',
-  };
-
-  return (
-    <section className="stats-section" style={statsSectionStyle}>
-      <div style={{ textAlign: 'center', animation: 'fadeInUp 1s 0.2s backwards' }}>
-        <h3 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>100+</h3>
-        <p>Shows Produced</p>
-      </div>
-      <div style={{ textAlign: 'center', animation: 'fadeInUp 1s 0.4s backwards' }}>
-        <h3 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>5M+</h3>
-        <p>Total Downloads</p>
-      </div>
-      <div style={{ textAlign: 'center', animation: 'fadeInUp 1s 0.6s backwards' }}>
-        <h3 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>100%</h3>
-        <p>Veteran Owned</p>
-      </div>
-    </section>
-  );
-};
-
-const About = () => {
-  const welcomeSectionStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-    gap: '50px',
-    alignItems: 'center',
-    padding: '80px 40px',
-    maxWidth: '1200px',
-    margin: '95px auto 0 auto'
-  };
-
-  return (
-    <section id="about" style={welcomeSectionStyle}>
-      <div style={{ animation: 'fadeInLeft 1s' }}>
-        <img src="/PodfinityDecor.jpg" alt="Podfinity Studio Wall Art" style={{ width: '100%', maxWidth: '550px', borderRadius: '10px', display: 'block', margin: '0 auto' }} />
-      </div>
-      <div style={{ animation: 'fadeInRight 1s' }}>
-        <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>WELCOME TO PODFINITY</h2>
-        <p style={{ lineHeight: '1.8' }}>From our state-of-the-art studios in Boca Raton, we provide a seamless, professional podcasting experience. We are a veteran-owned business dedicated to helping you find your voice and share your story. Whether you're a seasoned creator or just starting, our team is here to support you every step of the way.</p>
-      </div>
-    </section>
-  );
-};
-
-function App() {
-  return (
-    <Router>
-      <style>{globalStyles}</style>
-      <ScrollToSection />
-      <Header />
-      <ErrorBoundary>
-        <main style={{ flex: 1 }}>
-          <AnimatedSection><Hero /></AnimatedSection>
-          <AnimatedSection><StatsSection /></AnimatedSection>
-          <AnimatedSection><About /></AnimatedSection>
-          <AnimatedSection><Studios /></AnimatedSection>
-          <AnimatedSection><Podcasts /></AnimatedSection>
-          <AnimatedSection><Services /></AnimatedSection>
-          <AnimatedSection><Team /></AnimatedSection>
-          <AnimatedSection><TestimonialCarousel /></AnimatedSection>
-          <AnimatedSection><Contact /></AnimatedSection>
-        </main>
-      </ErrorBoundary>
-      <Footer />
-    </Router>
-  );
-}
-
-export default App;
-import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
-
-// Global Styles and Animations
-const globalStyles = `
-  /* Base Styles */
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap');
-
-  body {
-    background-color: #00050a; /* Deep space blue */
-    color: #f0f0f0;
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    scroll-behavior: smooth;
-  }
-
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-  }
-
-  @keyframes fadeInLeft {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes fadeInRight {
-    from { opacity: 0; transform: translateX(20px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-  
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Responsive Design */
-  .nav-links {
-    display: flex;
-    align-items: center;
-  }
-  .nav-toggle {
-    display: none;
-  }
-
-  /* Tablet and smaller */
-  @media (max-width: 992px) {
-    .nav-links {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 80px;
-      right: 0;
-      background-color: rgba(0, 5, 10, 0.95);
-      width: 100%;
-      padding: 20px 0;
-    }
-    .nav-links.active {
-      display: flex;
-    }
-    .nav-links a {
-      margin: 10px 0;
-      text-align: center;
-    }
-    .nav-toggle {
-      display: block;
-      background: none;
-      border: none;
-      color: #f0f0f0;
-      font-size: 2rem;
-      cursor: pointer;
-    }
-    #about {
-      grid-template-columns: 1fr !important;
-    }
-    .contact-grid,
-    .studios-grid,
-    .services-grid,
-    .team-grid,
-    .podcasts-grid {
-        grid-template-columns: 1fr;
-    }
-    .testimonial-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    .footer-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-    .footer-grid > div {
-        margin-bottom: 20px;
-    }
-  }
-
-  /* Mobile */
-  @media (max-width: 768px) {
-    .hero-title {
-      font-size: 2.5rem !important;
-    }
-    .hero-subtitle {
-      font-size: 1.2rem !important;
-    }
-    .stats-section {
-      flex-direction: column;
-      gap: 30px;
-    }
-  }
-`;
-
-// Helper component for smooth scrolling to sections
-const ScrollToSection = () => {
-  const { hash } = useLocation();
-
-  useEffect(() => {
-    if (hash) {
-      const id = hash.replace('#', '');
-      const element = document.getElementById(id);
-      if (element) {
-        const headerOffset = 95; // Height of fixed header + desired space
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth"
-        });
-      }
-    } else {
-      // Scroll to top on initial load or when hash is empty
-      window.scrollTo(0, 0);
-    }
-  }, [hash]);
-
-  return null;
-};
-
-// Mock Data
-const podcastsData = [
-    {
-        title: "Veteran Voices",
-        host: "with Marty Strong",
-        image: "/Veteran-Voices.jpg",
-        description: "In-depth conversations with veterans from all walks of life, sharing their stories of service, sacrifice, and success after the uniform."
-    },
-    {
-        name: "Boca Business Spotlight",
-        host: "with Pete Rodriguez",
-        image: "/Boca-Business-Spotlight.jpg",
-        description: "Pete sits down with local entrepreneurs and business leaders in Boca Raton to discuss their journey, challenges, and keys to success."
-    }
-];
-
-const teamData = [
-    {
-        name: "Marty Strong",
-        role: "CEO",
-        image: "/MartyStrong.jpg",
-        bio: "A seasoned leader and military veteran, Marty drives the strategic vision of Podfinity, ensuring excellence and operational discipline."
-    },
-    {
-        name: "Pete Rodriguez",
-        role: "Founder & Owner",
-        image: "/PeteRodriguez.jpg",
-        bio: "The heart of Podfinity. Pete's passion for audio and his veteran roots inspired the mission to give every voice a platform."
-    },
-    {
-        name: "Jessica Chen",
-        role: "Head of Production",
-        image: "/jessica-chen.jpg",
-        bio: "With a decade of experience in audio engineering, Jessica leads our production team, guaranteeing broadcast-quality sound."
-    },
-    {
-        name: "David Carter",
-        role: "Marketing Director",
-        image: "/david-carter.jpg",
-        bio: "David is a digital marketing guru who helps our clients grow their audience and monetize their content effectively."
-    }
-];
-
-const servicesData = [
-    {
-        title: "Audio & Video Recording",
-        description: "Capture crystal-clear audio and 4K video in our sound-treated, professional studios.",
-        icon: "🎤"
-    },
-    {
-        title: "Post-Production",
-        description: "Expert editing, mixing, and mastering to make your podcast sound polished and professional.",
-        icon: "🎧"
-    },
-    {
-        title: "Distribution & Hosting",
-        description: "Seamless publishing to all major podcast platforms, including Spotify, Apple, and Google Podcasts.",
-        icon: "🚀"
-    },
-    {
-        title: "Show Notes & Transcription",
-        description: "We create detailed show notes and accurate transcriptions to improve SEO and accessibility.",
-        icon: "📝"
-    },
-    {
-        title: "Marketing & Promotion",
-        description: "Strategic guidance and asset creation to help you grow your audience and build a community.",
-        icon: "📈"
-    },
-    {
-        title: "Consulting & Strategy",
-        description: "From concept to launch, our experts provide the guidance you need to create a successful show.",
-        icon: "💡"
-    }
-];
-
-const studioData = [
-    {
-        name: "Studio A: The Flagship",
-        image: "/studio-a.jpg",
-        description: "Our premier recording suite, equipped with industry-leading technology for up to 4 hosts. Perfect for flagship shows and roundtable discussions.",
-        specs: ["4+ Person Setup", "4K Video Capability", "Live-Streaming Ready"]
-    },
-    {
-        name: "Studio B: The Workhorse",
-        image: "/studio-b.jpg",
-        description: "A versatile and professional space designed for solo creators or 2-person interviews. All the quality, in a more intimate setting.",
-        specs: ["1-2 Person Setup", "Pristine Audio", "Comfort-Focused"]
-    },
-    {
-        name: "Studio C: The Content Creator",
-        image: "/studio-c.jpg",
-        description: "Optimized for solo remote recordings, voice-overs, and audiobook narration. Your dedicated space for focused content creation.",
-        specs: ["Solo Recording", "Sound-Treated Booth", "Remote Guest Integration"]
-    }
-];
-
-// Error Boundary Component
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
-    console.error("Uncaught error:", error, errorInfo);
-    this.setState({ error: error, errorInfo: errorInfo });
-  }
-
-  render() {
-    if (this.state.hasError) {
-      // You can render any custom fallback UI
-      return (
-        <div style={{ padding: '20px', color: 'red' }}>
-          <h2>Something went wrong.</h2>
-          <details style={{ whiteSpace: 'pre-wrap' }}>
-            {this.state.error && this.state.error.toString()}
-            <br />
-            {this.state.errorInfo && this.state.errorInfo.componentStack}
-          </details>
+        <div className="stat-item">
+            <h3>50+</h3>
+            <p>Active Shows</p>
         </div>
-      );
-    }
-
-    return this.props.children; 
-  }
-}
-
-const mockTestimonials = [
-    {
-        name: "Local Veteran Group",
-        role: "Community Partner",
-        quote: "Podfinity gave our stories a platform and a voice. Their commitment to the veteran community is real and deeply appreciated. The quality is second to none.",
-        image: "/non-profit-logo.jpg"
-    },
-    {
-        name: "Boca Chamber of Commerce",
-        role: "Business Partner",
-        quote: "A world-class production studio right here in Boca. Pete and his team are true professionals who are invested in local success.",
-        image: "/boca-chamber-logo.jpg"
-    }
-];
-
-// Components
-const AnimatedSection = ({ children, threshold = 0.1 }) => {
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold,
-  });
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(30px)',
-      }}
-    >
-      {children}
+        <div className="stat-item">
+            <h3>Community</h3>
+            <p>Veteran Owned & Operated</p>
+        </div>
+        <style jsx>{`
+            .stats-section {
+                display: flex;
+                justify-content: space-around;
+                background: var(--primary-color);
+                padding: 2rem;
+                border-top: 1px solid var(--glass-border);
+                border-bottom: 1px solid var(--glass-border);
+            }
+            .stat-item { text-align: center; }
+            .stat-item h3 { font-size: 2.5rem; color: var(--accent-color); }
+        `}</style>
     </div>
-  );
+);
+
+const AboutSection = () => (
+    <AnimatedSection id="about" className="about-section">
+        <h2 className="section-title">Veteran Owned, Community Focused</h2>
+        <div className="about-content">
+            <div className="about-image-container">
+                <img src="/NewVetpic.png" alt="Podfinity's veteran-focused community hub" className="about-image" />
+            </div>
+            <div className="about-text-container">
+                <h3>Our Mission</h3>
+                <p>Podfinity is more than just a studio; it's a community hub founded on the principles of service, integrity, and storytelling. As a veteran-owned business, we are deeply committed to providing a platform for fellow veterans, first responders, and local leaders to share their voices and experiences.</p>
+                <h3>Our Story</h3>
+                <p>Born from a passion for clear, impactful communication, Podfinity was established in Boca Raton to serve the unique needs of our community. We believe everyone has a story worth telling, and we provide the state-of-the-art tools and supportive environment to tell it right.</p>
+            </div>
+        </div>
+        <style jsx>{`
+            .about-content {
+                position: relative;
+                max-width: 1100px;
+                margin: 4rem auto 0;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+                gap: 2rem;
+            }
+            .about-image-container {
+                grid-column: 1 / 2;
+                grid-row: 1 / 2;
+                z-index: 1;
+                max-width: 80%; /* Adjust this value as needed */
+                justify-self: center; /* Center the image container in the grid cell */
+            }
+            .about-image {
+                width: 100%;
+                border-radius: 10px;
+                box-shadow: -10px 10px 30px rgba(0,0,0,0.4);
+                border: 2px solid var(--glass-border);
+            }
+            .about-text-container {
+                grid-column: 2 / 3;
+                grid-row: 1 / 2;
+                background: var(--glass-bg);
+                border: 1px solid var(--glass-border);
+                backdrop-filter: blur(8px);
+                padding: 3rem;
+                padding-left: 6rem;
+                border-radius: 10px;
+                margin-left: -8rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            }
+            @media (max-width: 900px) {
+                .about-content { grid-template-columns: 1fr; }
+                .about-image-container, .about-text-container {
+                    grid-column: 1 / 2;
+                    margin-left: 0;
+                    padding: 2rem;
+                }
+                .about-image-container { margin-bottom: -4rem; }
+                .about-text-container { padding-top: 5rem; }
+            }
+        `}</style>
+    </AnimatedSection>
+);
+
+const studios = [
+    { name: "The Command Center", image: "/20250724_2141_Podcast%20Studio%20Ambiance_simple_compose_01k0zkrpcvekr8j420kvze66kp.png", description: "Our flagship 4-person studio with 4K video, advanced lighting, and live-switching capabilities." },
+    { name: "The Fireside Chat", image: "/20250724_2136_Cozy%20Fireside%20Chat_simple_compose_01k0zkfyzxfp7bq2qavhmca12z.png", description: "An intimate 2-person setup perfect for in-depth interviews and one-on-one conversations." },
+    { name: "The Sunset Suite", image: "/20250724_2100_Podcasting%20at%20Sunset_remix_01k0zhe2d7eh28w9t3zmcrkk86.png", description: "A versatile solo studio for voice-overs, audiobooks, and single-host podcasts with a view." },
+];
+
+const StudioCard = ({ studio }) => (
+    <div className="studio-card">
+        <img src={studio.image} alt={studio.name} className="studio-image" />
+        <div className="studio-info">
+            <h3>{studio.name}</h3>
+            <p>{studio.description}</p>
+        </div>
+    </div>
+);
+
+const StudiosSection = () => (
+    <AnimatedSection id="studios" className="studios-section">
+        <h2 className="section-title">Our Studios</h2>
+        <div className="studios-grid">
+            {studios.map(studio => (
+                <StudioCard key={studio.name} studio={studio} />
+            ))}
+        </div>
+        <style jsx>{`
+            .studios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+            .studio-card { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(8px); border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; }
+            .studio-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 10px; border: 2px solid transparent; background: linear-gradient(120deg, var(--accent-color), transparent, var(--accent-color)) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); -webkit-mask-composite: destination-out; mask-composite: exclude; z-index: 1; opacity: 0.3; transition: opacity 0.3s ease; pointer-events: none; }
+            .studio-card:hover::before { opacity: 1; }
+            .studio-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(var(--accent-color-rgb), 0.2); }
+            .studio-image { width: 100%; height: 250px; object-fit: cover; display: block; }
+            .studio-info { padding: 1.5rem; }
+            .studio-info h3 { font-size: 1.6rem; color: var(--accent-color); margin-bottom: 0.5rem; }
+        `}</style>
+    </AnimatedSection>
+);
+
+const ServicesSection = () => (
+    <AnimatedSection id="services" className="services-section">
+        <h2 className="section-title">What We Offer</h2>
+        <div className="services-list">
+            {services.map((service, index) => (
+                <div key={index} className="service-item">
+                    <div className="service-icon-container">
+                        <span className="service-icon">{service.icon}</span>
+                    </div>
+                    <div className="service-text">
+                        <h3>{service.title}</h3>
+                        <p>{service.description}</p>
+                    </div>
+                </div>
+            ))}
+        </div>
+        <style jsx>{`
+            .services-list { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 4rem; }
+            .service-item { display: flex; align-items: center; gap: 3rem; }
+            .service-item:nth-child(even) { flex-direction: row-reverse; }
+            .service-icon-container { flex-shrink: 0; width: 150px; height: 150px; background: var(--glass-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--glass-border); box-shadow: 0 0 25px rgba(var(--accent-color-rgb), 0.2); }
+            .service-icon { font-size: 4rem; }
+            .service-text { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(8px); padding: 2rem; border-radius: 10px; flex-grow: 1; }
+            .service-text h3 { font-size: 1.8rem; color: var(--accent-color); }
+            @media (max-width: 768px) {
+                .service-item, .service-item:nth-child(even) { flex-direction: column; text-align: center; }
+            }
+        `}</style>
+    </AnimatedSection>
+);
+
+const TeamMemberCard = ({ member }) => (
+    <div className="team-member-card">
+        <div className="team-member-image-container">
+            <img src={member.image} alt={`Portrait of ${member.name}`} className="team-member-image" />
+        </div>
+        <div className="team-member-info">
+            <h3>{member.name}</h3>
+            <p>{member.role}</p>
+        </div>
+    </div>
+);
+
+const TeamSection = () => (
+    <AnimatedSection id="team" className="team-section">
+        <h2 className="section-title">Our Team</h2>
+        <div className="team-grid">
+            {teamMembers.map(member => (
+                <TeamMemberCard key={`${member.name}-${member.role}`} member={member} />
+            ))}
+        </div>
+        <style jsx>{`
+            .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 5rem 2rem; max-width: 1200px; margin: 0 auto; padding-top: 80px; }
+            .team-member-card { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(8px); border-radius: 10px; padding: 1.5rem; padding-top: 70px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; z-index: 1; }
+            .team-member-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 10px; border: 2px solid transparent; background: linear-gradient(120deg, var(--accent-color), transparent, var(--accent-color)) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); -webkit-mask-composite: destination-out; mask-composite: exclude; z-index: -1; opacity: 0.3; transition: opacity 0.3s ease; }
+            .team-member-card:hover::before { opacity: 1; }
+            .team-member-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+            .team-member-image-container { position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 4px solid var(--background-color); box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 2; }
+            .team-member-image { width: 100%; height: 100%; object-fit: cover; }
+            .team-member-info h3 { margin: 0.5rem 0 0.25rem; font-size: 1.6rem; }
+            .team-member-info p { color: var(--accent-color); font-weight: bold; font-size: 1rem; }
+        `}</style>
+    </AnimatedSection>
+);
+
+const TestimonialsSection = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const nextTestimonial = () => setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+    const prevTestimonial = () => setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
+
+    return (
+        <AnimatedSection id="testimonials" className="testimonials-section">
+            <h2 className="section-title">What Our Clients Say</h2>
+            <div className="testimonial-container">
+                <div className="testimonial-card">
+                    <span className="quote-icon">“</span>
+                    <p className="testimonial-quote">{testimonials[currentIndex].quote}</p>
+                    <p className="testimonial-author">- {testimonials[currentIndex].author}</p>
+                </div>
+                <div className="carousel-nav">
+                    <button onClick={prevTestimonial} className="carousel-btn">&#x2190;</button>
+                    <button onClick={nextTestimonial} className="carousel-btn">&#x2192;</button>
+                </div>
+            </div>
+            <style jsx>{`
+                .testimonial-container { max-width: 800px; margin: 0 auto; position: relative; }
+                .testimonial-card { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); padding: 3rem; border-radius: 15px; position: relative; overflow: hidden; min-height: 300px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+                .quote-icon { position: absolute; top: -20px; left: 10px; font-size: 12rem; color: rgba(var(--accent-color-rgb), 0.1); line-height: 1; z-index: -1; }
+                .testimonial-quote { font-size: 1.5rem; font-style: italic; margin-bottom: 1.5rem; }
+                .testimonial-author { font-weight: bold; color: var(--accent-color); align-self: flex-end; }
+                .carousel-nav { margin-top: 2rem; }
+                .carousel-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-color); width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; margin: 0 0.5rem; transition: all 0.3s ease; }
+                .carousel-btn:hover { background: var(--accent-color); color: var(--background-color); transform: scale(1.1); }
+            `}</style>
+        </AnimatedSection>
+    );
 };
 
-const Header = () => {
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const { pathname, hash } = useLocation();
-  const currentPath = hash || pathname;
-
-  const getLinkStyle = (path) => ({
-    color: '#f0f0f0',
-    textDecoration: 'none',
-    margin: '0 15px',
-    fontFamily: "'Orbitron', sans-serif",
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    fontSize: '1rem',
-    transition: 'color 0.3s ease, text-shadow 0.3s ease',
-    ...(currentPath === path && { color: '#ff6600', textShadow: '0 0 8px rgba(255, 102, 0, 0.7)' })
-  });
-
-  return (
-    <header style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '15px 30px',
-      backgroundColor: 'rgba(0, 5, 10, 0.8)',
-      backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid rgba(255, 102, 0, 0.2)',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 1000,
-      height: '65px'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <img src="/PodfinityLogo.png" alt="Podfinity Logo" style={{ height: '50px', marginRight: '20px' }} />
-        <span style={{
-          fontFamily: "'Orbitron', sans-serif",
-          fontSize: '1.8rem',
-          fontWeight: 'bold',
-          color: '#f0f0f0',
-          letterSpacing: '2px'
-        }}>PODFINITY</span>
-      </div>
-            <nav>
-        <div className={`nav-links ${isNavOpen ? 'active' : ''}`}>
-          <Link to="/#home" style={getLinkStyle('#home')} onClick={() => setIsNavOpen(false)}>Home</Link>
-          <Link to="/#about" style={getLinkStyle('#about')} onClick={() => setIsNavOpen(false)}>About</Link>
-          <Link to="/#studios" style={getLinkStyle('#studios')} onClick={() => setIsNavOpen(false)}>Studios</Link>
-          <Link to="/#podcasts" style={getLinkStyle('#podcasts')} onClick={() => setIsNavOpen(false)}>Podcasts</Link>
-          <Link to="/#services" style={getLinkStyle('#services')} onClick={() => setIsNavOpen(false)}>Services</Link>
-          <Link to="/#team" style={getLinkStyle('#team')} onClick={() => setIsNavOpen(false)}>Team</Link>
-          <Link to="/#contact" style={getLinkStyle('#contact')} onClick={() => setIsNavOpen(false)}>Contact</Link>
+const ContactSection = () => (
+    <AnimatedSection id="contact" className="contact-section">
+        <h2 className="section-title">Start Your Journey</h2>
+        <div className="contact-container">
+            <div className="contact-form-container">
+                <form className="contact-form">
+                    <input type="text" placeholder="Your Name" required />
+                    <input type="email" placeholder="Your Email" required />
+                    <textarea placeholder="Your Message" rows="6" required></textarea>
+                    <button type="submit" className="submit-btn">Send Message</button>
+                </form>
+            </div>
+            <div className="contact-info">
+                <h3>Book a Tour or Consultation</h3>
+                <p>Ready to see the studios? Have a project in mind? Reach out and let's create something powerful together.</p>
+                <p><strong>Email:</strong> contact@podfinity.com</p>
+                <p><strong>Phone:</strong> (561) 555-1234</p>
+            </div>
         </div>
-        <button className="nav-toggle" onClick={() => setIsNavOpen(!isNavOpen)}>
-          {isNavOpen ? '✕' : '☰'}
-        </button>
-      </nav>
-    </header>
-  );
-};
+        <style jsx>{`
+            .contact-section {
+                background-image: linear-gradient(rgba(13, 27, 42, 0.9), rgba(13, 27, 42, 0.9)), url('/20250724_2105_Serene%20Warriors%27%20Retreat_simple_compose_01k0zhpf2venpt8hbvzsgvdrkw.png');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+            .contact-container { display: grid; grid-template-columns: 1fr 1fr; max-width: 1100px; margin: 0 auto; gap: 3rem; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); padding: 3rem; border-radius: 15px; }
+            .contact-form input, .contact-form textarea { width: 100%; padding: 1rem; margin-bottom: 1rem; background: var(--primary-color); border: 1px solid var(--secondary-color); border-radius: 5px; color: var(--text-color); font-family: var(--font-main); }
+            .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--text-color-secondary); }
+            .submit-btn { width: 100%; padding: 1rem; background: var(--accent-color); color: var(--background-color); border: none; border-radius: 5px; font-family: var(--font-display); font-size: 1.2rem; cursor: pointer; transition: background-color 0.3s; }
+            .submit-btn:hover { background: var(--text-color); }
+            .contact-info { padding-left: 2rem; border-left: 2px solid var(--accent-color); }
+            .contact-info h3 { font-size: 2rem; color: var(--accent-color); margin-bottom: 1rem; }
+            .contact-info p { margin-bottom: 1rem; }
+            @media (max-width: 900px) {
+                .contact-container { grid-template-columns: 1fr; }
+                .contact-info { padding-left: 0; border-left: none; margin-top: 2rem; }
+            }
+        `}</style>
+    </AnimatedSection>
+);
 
-const Footer = () => {
-  const footerStyle = {
-    backgroundColor: '#00050a',
-    color: '#f0f0f0',
-    padding: '40px',
-    borderTop: '1px solid rgba(255, 102, 0, 0.2)'
-  };
-  const gridStyle = {
-    display: 'grid',
-    gridTemplateColumns: '2fr 1fr 1fr',
-    gap: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto'
-  };
-  const linkStyle = { color: '#ff6600', textDecoration: 'none', margin: '0 10px' };
-
-  return (
-    <footer style={footerStyle}>
-      <div className="footer-grid" style={gridStyle}>
-        <div>
-          <h4 style={{fontFamily: "'Orbitron', sans-serif", color: '#ff6600'}}>PODFINITY</h4>
-          <p>Boca Raton's Premier Veteran-Owned Podcast Studio.</p>
+const Footer = () => (
+    <footer className="footer">
+        <div className="footer-content">
+            <div className="footer-brand">
+                <div className="logo-container">
+                    <img src="/NewIcon.png" alt="Podfinity Logo" className="footer-logo" />
+                    <h3>PODFINITY</h3>
+                </div>
+                <p>Amplify Your Voice.</p>
+            </div>
+            <div className="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#studios">Studios</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div className="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Email: contact@podfinity.com</p>
+                <p>Phone: (561) 555-1234</p>
+            </div>
+            <div className="footer-social">
+                <h4>Follow Us</h4>
+                {/* Add social links here */}
+            </div>
         </div>
-        <div>
-          <h4 style={{fontFamily: "'Orbitron', sans-serif", color: '#ff6600'}}>Quick Links</h4>
-          <ul style={{listStyle: 'none', padding: 0}}>
-            <li><a href="#about" style={{color: '#f0f0f0', textDecoration: 'none'}}>About</a></li>
-            <li><a href="#services" style={{color: '#f0f0f0', textDecoration: 'none'}}>Services</a></li>
-            <li><a href="#team" style={{color: '#f0f0f0', textDecoration: 'none'}}>Team</a></li>
-          </ul>
+        <div className="footer-bottom">
+            <p>&copy; {new Date().getFullYear()} Podfinity. All Rights Reserved. | Boca Raton, FL</p>
         </div>
-        <div>
-          <h4 style={{fontFamily: "'Orbitron', sans-serif", color: '#ff6600'}}>Contact</h4>
-          <p>contact@podfinity.com</p>
-          <p>(561) 555-1234</p>
-        </div>
-      </div>
-      <div style={{textAlign: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px solid rgba(255, 102, 0, 0.1)'}}>
-        <p>&copy; 2024 Podfinity. All Rights Reserved.</p>
-      </div>
+        <style jsx>{`
+            .footer { background: var(--background-color); color: var(--text-color-secondary); padding: 4rem 2rem 2rem; border-top: 1px solid var(--glass-border); }
+            .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; margin-bottom: 2rem; }
+            .footer-brand .logo-container { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+            .footer-logo { width: 40px; height: 40px; }
+            .footer-brand h3 { font-size: 1.5rem; color: var(--text-color); margin: 0; }
+            .footer-brand p { font-style: italic; }
+            .footer h4 { font-size: 1.2rem; color: var(--accent-color); margin-bottom: 1rem; }
+            .footer ul { list-style: none; padding: 0; }
+            .footer ul li a { color: var(--text-color-secondary); text-decoration: none; transition: color 0.3s ease; display: block; margin-bottom: 0.5rem; }
+            .footer ul li a:hover { color: var(--accent-color); }
+            .footer-bottom { text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); }
+        `}</style>
     </footer>
-  );
+);
+
+
+const App = () => {
+    useEffect(() => {
+        const handleScroll = () => {
+            const offset = window.scrollY;
+            document.body.style.backgroundPositionY = -offset * 0.5 + 'px';
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    return (
+        <>
+            <GlobalStyles />
+            <Header />
+            <main>
+                <HeroSection />
+                <StatsSection />
+                <AboutSection />
+                <StudiosSection />
+                <ServicesSection />
+                <TeamSection />
+                <TestimonialsSection />
+                <ContactSection />
+            </main>
+            <Footer />
+        </>
+    );
 };
-
-const Contact = () => {
-  const sectionStyle = { 
-    paddingTop: '95px', 
-    paddingBottom: '60px', 
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-  };
-  const containerStyle = {
-    maxWidth: '1000px',
-    margin: '0 auto',
-    padding: '0 40px',
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '50px',
-    alignItems: 'flex-start'
-  };
-  const inputStyle = {
-    width: '100%',
-    padding: '12px',
-    marginBottom: '20px',
-    backgroundColor: 'rgba(0, 5, 10, 0.7)',
-    border: '1px solid rgba(255, 102, 0, 0.3)',
-    borderRadius: '5px',
-    color: '#f0f0f0',
-    boxSizing: 'border-box'
-  };
-  const buttonStyle = {
-    backgroundColor: '#ff6600',
-    color: '#00050a',
-    border: 'none',
-    padding: '15px 30px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    fontFamily: "'Orbitron', sans-serif",
-    width: '100%',
-    fontSize: '1rem',
-    textTransform: 'uppercase'
-  };
-
-  return (
-    <section id="contact" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600', textAlign: 'center', marginBottom: '40px' }}>GET IN TOUCH</h2>
-      <div className="contact-grid" style={containerStyle}>
-        <div>
-          <h3 style={{fontFamily: "'Orbitron', sans-serif"}}>Send Us a Message</h3>
-          <form onSubmit={e => e.preventDefault()}>
-            <input type="text" placeholder="Your Name" style={inputStyle} />
-            <input type="email" placeholder="Your Email" style={inputStyle} />
-            <textarea placeholder="Your Message" rows="6" style={{...inputStyle, resize: 'vertical'}}></textarea>
-            <button type="submit" style={buttonStyle}>Send Message</button>
-          </form>
-        </div>
-        <div>
-          <h3 style={{fontFamily: "'Orbitron', sans-serif"}}>Contact Information</h3>
-          <p style={{lineHeight: 1.8}}>
-            <strong>Address:</strong><br/>
-            123 Victory Lane<br/>
-            Boca Raton, FL 33431
-          </p>
-          <p style={{lineHeight: 1.8}}>
-            <strong>Email:</strong><br/>
-            <a href="mailto:contact@podfinity.com" style={{color: '#ff6600', textDecoration: 'none'}}>contact@podfinity.com</a>
-          </p>
-          <p style={{lineHeight: 1.8}}>
-            <strong>Phone:</strong><br/>
-            (561) 555-1234
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Podcasts = () => {
-  const sectionStyle = { paddingTop: '95px', paddingBottom: '60px', textAlign: 'center', backgroundColor: '#00050a' };
-  const cardContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 400px))',
-    gap: '40px',
-    padding: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    justifyContent: 'center'
-  };
-  const cardStyle = {
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    borderRadius: '10px',
-    padding: '0',
-    textAlign: 'center',
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column'
-  };
-
-  return (
-    <section id="podcasts" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>FEATURED PODCASTS</h2>
-      <div className="podcasts-grid" style={cardContainerStyle}>
-        {podcastsData.map((podcast, index) => (
-          <div key={index} style={cardStyle}>
-            <img src={podcast.image} alt={podcast.title} style={{ width: '100%', height: 'auto' }} />
-            <div style={{ padding: '20px' }}>
-              <h3 style={{ fontFamily: "'Orbitron', sans-serif", color: '#ff6600' }}>{podcast.title || podcast.name}</h3>
-              <p style={{ fontWeight: 'bold', color: 'rgba(240, 240, 240, 0.8)', marginTop: '-10px' }}>{podcast.host}</p>
-              <p style={{ lineHeight: '1.6' }}>{podcast.description}</p>
-              <button style={{
-                backgroundColor: 'transparent',
-                color: '#ff6600',
-                border: '2px solid #ff6600',
-                padding: '10px 20px',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontFamily: "'Orbitron', sans-serif",
-                marginTop: '15px',
-                transition: 'background-color 0.3s, color 0.3s'
-              }}>Listen Now</button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-
-const Team = () => {
-  const sectionStyle = { paddingTop: '95px', paddingBottom: '60px', textAlign: 'center' };
-  const cardContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 350px))',
-    gap: '30px',
-    padding: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    justifyContent: 'center'
-  };
-  const cardStyle = {
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    borderRadius: '10px',
-    padding: '20px',
-    textAlign: 'center',
-  };
-
-  return (
-    <section id="team" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>MEET THE TEAM</h2>
-      <div className="team-grid" style={cardContainerStyle}>
-        {teamData.map((member, index) => (
-          <div key={index} style={cardStyle}>
-            <img src={member.image} alt={member.name} style={{ width: '150px', height: '150px', borderRadius: '50%', marginBottom: '15px', border: '3px solid #ff6600', objectFit: 'cover' }} />
-            <h3 style={{ fontFamily: "'Orbitron', sans-serif", color: '#ff6600' }}>{member.name}</h3>
-            <p style={{ fontWeight: 'bold', color: 'rgba(240, 240, 240, 0.8)' }}>{member.role}</p>
-            <p style={{ lineHeight: '1.6', fontSize: '0.9rem' }}>{member.bio}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-
-const Services = () => {
-  const sectionStyle = { paddingTop: '95px', paddingBottom: '60px', textAlign: 'center', backgroundColor: '#00050a' };
-  const cardContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 400px))',
-    gap: '30px',
-    padding: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    justifyContent: 'center'
-  };
-  const cardStyle = {
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    borderRadius: '10px',
-    padding: '30px',
-    textAlign: 'center',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-  };
-
-  return (
-    <section id="services" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>OUR SERVICES</h2>
-      <div className="services-grid" style={cardContainerStyle}>
-        {servicesData.map((service, index) => (
-          <div key={index} style={cardStyle}
-               onMouseEnter={e => {
-                 e.currentTarget.style.transform = 'translateY(-10px)';
-                 e.currentTarget.style.boxShadow = '0 10px 20px rgba(255, 102, 0, 0.2)';
-               }}
-               onMouseLeave={e => {
-                 e.currentTarget.style.transform = 'translateY(0px)';
-                 e.currentTarget.style.boxShadow = 'none';
-               }}>
-            <div style={{ fontSize: '3rem', marginBottom: '15px' }}>{service.icon}</div>
-            <h3 style={{ fontFamily: "'Orbitron', sans-serif", color: '#ff6600' }}>{service.title}</h3>
-            <p style={{ lineHeight: '1.6' }}>{service.description}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-
-const Studios = () => {
-  const sectionStyle = { paddingTop: '95px', paddingBottom: '60px', textAlign: 'center' };
-  const cardContainerStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 400px))',
-    gap: '30px',
-    padding: '40px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    justifyContent: 'center'
-  };
-  const cardStyle = {
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    borderRadius: '10px',
-    overflow: 'hidden',
-    textAlign: 'left',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    display: 'flex',
-    flexDirection: 'column'
-  };
-  const buttonStyle = {
-    backgroundColor: 'transparent',
-    color: '#ff6600',
-    border: '2px solid #ff6600',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    fontFamily: "'Orbitron', sans-serif",
-    marginTop: 'auto',
-    transition: 'background-color 0.3s, color 0.3s'
-  };
-
-  return (
-    <section id="studios" style={sectionStyle}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>OUR STUDIOS</h2>
-      <div className="studios-grid" style={cardContainerStyle}>
-        {studioData.map((studio, index) => (
-          <div key={index} style={cardStyle} 
-               onMouseEnter={e => {
-                 e.currentTarget.style.transform = 'translateY(-10px)';
-                 e.currentTarget.style.boxShadow = '0 10px 20px rgba(255, 102, 0, 0.2)';
-               }}
-               onMouseLeave={e => {
-                 e.currentTarget.style.transform = 'translateY(0px)';
-                 e.currentTarget.style.boxShadow = 'none';
-               }}>
-            <img src={studio.image} alt={studio.name} style={{ width: '100%', height: 'auto' }} />
-            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-              <h3 style={{ fontFamily: "'Orbitron', sans-serif", color: '#ff6600', marginTop: '0' }}>{studio.name}</h3>
-              <p>{studio.description}</p>
-              <ul style={{ paddingLeft: '20px', marginBottom: '20px' }}>
-                {studio.specs.map((spec, i) => <li key={i}>{spec}</li>)}
-              </ul>
-              <button style={buttonStyle} 
-                      onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#ff6600'; e.currentTarget.style.color = '#00050a'; }} 
-                      onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#ff6600'; }}>
-                Book Now
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-  const TestimonialCarousel = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const nextSlide = () => {
-    setActiveIndex((current) => (current === mockTestimonials.length - 1 ? 0 : current + 1));
-  };
-
-  const prevSlide = () => {
-    setActiveIndex((current) => (current === 0 ? mockTestimonials.length - 1 : current - 1));
-  };
-
-  const carouselStyle = {
-    position: 'relative',
-    maxWidth: '800px',
-    margin: '95px auto',
-    overflow: 'hidden',
-    borderRadius: '10px',
-    border: '1px solid rgba(255, 102, 0, 0.2)',
-    backgroundColor: 'rgba(10, 25, 47, 0.4)',
-    padding: '40px 60px'
-  };
-
-  const slideStyle = {
-    textAlign: 'center',
-    fontStyle: 'italic',
-    fontSize: '1.2rem',
-    lineHeight: '1.6'
-  };
-
-  const arrowStyle = {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    background: 'rgba(255, 255, 255, 0.1)',
-    border: 'none',
-    color: '#ff6600',
-    fontSize: '2rem',
-    cursor: 'pointer',
-    padding: '10px',
-    borderRadius: '50%',
-    zIndex: 1000
-  };
-
-  return (
-    <section id="testimonials" style={{ paddingTop: '95px', paddingBottom: '60px' }}>
-      <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600', textAlign: 'center' }}>WHAT OUR CLIENTS SAY</h2>
-      <div style={carouselStyle}>
-        <div style={slideStyle}>
-          <p>"{mockTestimonials[activeIndex].quote}"</p>
-          <div>
-            <p style={{ fontWeight: 'bold', color: '#ff6600' }}>- {mockTestimonials[activeIndex].name}, {mockTestimonials[activeIndex].role}</p>
-          </div>
-        </div>
-        <button onClick={prevSlide} style={{ ...arrowStyle, left: '10px' }}>&#10094;</button>
-        <button onClick={nextSlide} style={{ ...arrowStyle, right: '10px' }}>&#10095;</button>
-      </div>
-    </section>
-  );
-};
-
-const Hero = () => {
-  const heroStyle = {
-    height: 'calc(100vh - 95px)',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    padding: '0 20px',
-    background: 'url(/PodfinityHero.jpg) no-repeat center center/cover',
-    marginTop: '95px' // Offset for fixed header
-  };
-
-  return (
-    <section id="home" style={heroStyle}>
-      <div style={{
-        backgroundColor: 'rgba(0, 5, 10, 0.7)',
-        padding: '20px 40px',
-        borderRadius: '10px',
-        backdropFilter: 'blur(5px)',
-        border: '1px solid rgba(255, 102, 0, 0.3)',
-        animation: 'fadeInUp 1s 0.5s backwards'
-      }}>
-        <h1 className="hero-title" style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '4rem', margin: 0, color: '#ff6600' }}>FIND YOUR VOICE</h1>
-        <p className="hero-subtitle" style={{ fontSize: '1.5rem' }}>Boca Raton's Premier Veteran-Owned Podcast Studio</p>
-      </div>
-    </section>
-  );
-};
-
-const StatsSection = () => {
-  const statsSectionStyle = {
-    display: 'flex',
-    justifyContent: 'space-around',
-    padding: '40px',
-    backgroundColor: 'rgba(0, 5, 10, 0.5)',
-    borderTop: '1px solid rgba(255, 102, 0, 0.2)',
-    borderBottom: '1px solid rgba(255, 102, 0, 0.2)',
-  };
-
-  return (
-    <section className="stats-section" style={statsSectionStyle}>
-      <div style={{ textAlign: 'center', animation: 'fadeInUp 1s 0.2s backwards' }}>
-        <h3 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>100+</h3>
-        <p>Shows Produced</p>
-      </div>
-      <div style={{ textAlign: 'center', animation: 'fadeInUp 1s 0.4s backwards' }}>
-        <h3 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>5M+</h3>
-        <p>Total Downloads</p>
-      </div>
-      <div style={{ textAlign: 'center', animation: 'fadeInUp 1s 0.6s backwards' }}>
-        <h3 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>100%</h3>
-        <p>Veteran Owned</p>
-      </div>
-    </section>
-  );
-};
-
-const About = () => {
-  const welcomeSectionStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-    gap: '50px',
-    alignItems: 'center',
-    padding: '80px 40px',
-    maxWidth: '1200px',
-    margin: '95px auto 0 auto'
-  };
-
-  return (
-    <section id="about" style={welcomeSectionStyle}>
-      <div style={{ animation: 'fadeInLeft 1s' }}>
-        <img src="/PodfinityDecor.jpg" alt="Podfinity Studio Wall Art" style={{ width: '100%', maxWidth: '550px', borderRadius: '10px', display: 'block', margin: '0 auto' }} />
-      </div>
-      <div style={{ animation: 'fadeInRight 1s' }}>
-        <h2 style={{ fontFamily: "'Orbitron', sans-serif", fontSize: '2.5rem', color: '#ff6600' }}>WELCOME TO PODFINITY</h2>
-        <p style={{ lineHeight: '1.8' }}>From our state-of-the-art studios in Boca Raton, we provide a seamless, professional podcasting experience. We are a veteran-owned business dedicated to helping you find your voice and share your story. Whether you're a seasoned creator or just starting, our team is here to support you every step of the way.</p>
-      </div>
-    </section>
-  );
-};
-
-function App() {
-  return (
-    <Router>
-      <style>{globalStyles}</style>
-      <ScrollToSection />
-      <Header />
-      <ErrorBoundary>
-        <main style={{ flex: 1 }}>
-          <AnimatedSection><Hero /></AnimatedSection>
-          <AnimatedSection><StatsSection /></AnimatedSection>
-          <AnimatedSection><About /></AnimatedSection>
-          <AnimatedSection><Studios /></AnimatedSection>
-          <AnimatedSection><Podcasts /></AnimatedSection>
-          <AnimatedSection><Services /></AnimatedSection>
-          <AnimatedSection><Team /></AnimatedSection>
-          <AnimatedSection><TestimonialCarousel /></AnimatedSection>
-          <AnimatedSection><Contact /></AnimatedSection>
-        </main>
-      </ErrorBoundary>
-      <Footer />
-    </Router>
-  );
-}
 
 export default App;
