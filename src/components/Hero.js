@@ -88,6 +88,9 @@ const HeroSection = () => {
                         padding: 10rem 1.5rem; /* Add vertical and horizontal space */
                         box-sizing: border-box;
                     }
+                    .hero-content {
+                        margin: 0 auto; /* Explicitly center the content block */
+                    }
                     .hero-title {
                         font-size: 2.4rem; /* Scaled for mobile */
                     }
