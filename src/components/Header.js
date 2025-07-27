@@ -53,7 +53,7 @@ const Header = () => {
                     <a href="#podcasts" onClick={handleNavLinkClick}>PODCASTS</a>
                     <a href="#services" onClick={handleNavLinkClick}>SERVICES</a>
                     <a href="#team" onClick={handleNavLinkClick}>TEAM</a>
-                    <a href="#contact" onClick={handleNavLinkClick}>CONTACT</a>
+                    <a href="#contact" onClick={handleNavLinkClick} style={{ borderBottom: 'none' }}>CONTACT</a>
                 </nav>
             </div>
             <style jsx>{`
@@ -96,9 +96,9 @@ const Header = () => {
                         background: #0a0a0a; /* Definitive solid background */
                         display: flex; 
                         flex-direction: column; 
-                        align-items: center; /* Center links for a cleaner look */
+                        align-items: flex-start; /* Left-align content */
                         justify-content: center; 
-                        gap: 1.2rem; 
+                        gap: 0; /* Remove gap, use borders for separation */ 
                         padding: 2rem; 
                         z-index: 999; 
                         transform: translateX(100%); /* Start off-screen */
@@ -112,20 +112,20 @@ const Header = () => {
                         visibility: visible;
                     }
                     .mobile-nav-links a, .mobile-nav-links a:link, .mobile-nav-links a:visited {
-                        font-size: 1.5rem; /* Slightly larger for better touch targets */
+                        font-size: 1.3rem; /* Refined font size */
                         color: var(--text-color);
                         text-decoration: none;
                         font-family: var(--font-display);
                         font-weight: 700;
-                        padding: 0.8rem 1.6rem;
+                        padding: 1rem 1.5rem; /* Adjusted padding */
                         width: 100%;
-                        text-align: center; /* Centered text */
-                        border-radius: 8px;
+                        text-align: left; /* Left-aligned text */
+                        border-bottom: 1px solid var(--glass-border); /* Separator line */
                         transition: background-color 0.3s, color 0.3s;
                     }
                     .mobile-nav-links a:hover, .mobile-nav-links a:active {
-                        background-color: var(--accent-color);
-                        color: #0a0a0a; /* Dark text on accent for contrast */
+                        background-color: rgba(147, 199, 217, 0.1); /* Subtle accent hover */
+                        color: var(--accent-color);
                     }
                 }
             `}</style>
