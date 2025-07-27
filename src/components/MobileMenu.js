@@ -13,7 +13,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
             width: 100%;
             height: 100%;
             background-color: #0A192F; /* Solid, opaque background */
-            z-index: 1000;
+            z-index: 9999; /* Ensure it's on top of everything */
             display: flex;
             flex-direction: column;
             align-items: center;
