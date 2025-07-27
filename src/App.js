@@ -26,7 +26,7 @@ const GlobalStyles = () => (
             --accent-color-rgb: 0, 82, 204;
             --text-color: #f0f0f0;
             --text-color-secondary: #a0a0a0;
-            --glass-bg: rgba(26, 26, 26, 0.6);
+            --glass-background: rgba(20, 20, 30, 0.95);
             --glass-border: rgba(42, 42, 42, 0.7);
             --font-main: 'Roboto', sans-serif;
             --font-display: 'Orbitron', sans-serif;

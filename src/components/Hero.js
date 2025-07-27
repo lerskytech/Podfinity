@@ -93,7 +93,7 @@ const HeroSection = () => {
                         flex-direction: column;
                         align-items: center; /* This will center all items horizontally */
                         text-align: center; /* Fallback for text alignment */
-                        max-width: 95%; /* Subtle: Widen the container */
+                        max-width: 98%; /* Final adjustment: Widen container */
                     }
                     .hero-title {
                         font-size: 2.4rem; /* Scaled for mobile */
