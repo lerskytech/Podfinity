@@ -1,11 +1,11 @@
 import React from 'react';
 
-const MobileMenu = ({ isOpen, onLinkClick }) => {
+const MobileMenu = ({ isOpen, onLinkClick, onClose }) => {
     const navLinks = ['HOME', 'ABOUT', 'STUDIOS', 'PODCASTS', 'SERVICES', 'TEAM', 'CONTACT'];
 
     return (
         <>
-            <div className={`mobile-nav-overlay ${isOpen ? 'open' : ''}`} onClick={onLinkClick}></div>
+            <div className={`mobile-nav-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
             <nav className={`mobile-nav-links ${isOpen ? 'open' : ''}`}>
                 {navLinks.map((link, index) => (
                     <a 
