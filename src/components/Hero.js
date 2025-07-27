@@ -145,6 +145,8 @@ const HeroSection = () => {
                         max-width: 98%; /* Final adjustment: Widen container */
                         min-height: 60vh; /* Give container explicit height for robust centering */
                         padding: 2rem 1rem; /* Adjust padding */
+                        position: relative; /* Enable manual positioning */
+                        top: 3vh; /* Brute-force nudge down */
                     }
                     .hero-title {
                         font-size: 1.5rem; /* Enlarged title for better balance */
