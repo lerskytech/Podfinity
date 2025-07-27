@@ -85,7 +85,7 @@ const Header = () => {
                     .bar.open:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
                     .bar.open:nth-child(2) { opacity: 0; }
                     .bar.open:nth-child(3) { top: 50%; transform: translateY(-50%) rotate(-45deg); }
-                    .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+                    .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
                     .mobile-nav-overlay.open { opacity: 1; visibility: visible; }
                     .mobile-nav-links { position: fixed; top: 0; right: -300px; width: 250px; height: 100%; background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1rem; transition: right 0.4s ease-in-out; padding: 2rem; }
                     .mobile-nav-links.open { right: 0; }
