@@ -82,31 +82,6 @@ const HeroSection = () => {
                     border: 1px solid var(--glass-border);
                     max-width: 90%;
                 }
-                @media (max-width: 768px) {
-                    .hero-section {
-                        height: auto; /* Let content define height */
-                        padding: 6rem 1.5rem 4rem; /* Bumped up container, reduced bottom padding */
-                        box-sizing: border-box;
-                    }
-                    .hero-content {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center; /* This will center all items horizontally */
-                        text-align: center; /* Fallback for text alignment */
-                        max-width: 98%; /* Final adjustment: Widen container */
-                    }
-                    .hero-title {
-                        font-size: 1.2rem; /* Aggressively reduced for visibility */
-                    }
-                    .hero-subtitle {
-                        font-size: 0.8rem; /* Aggressively reduced for visibility */
-                        margin: 1.2rem 0 1.8rem; /* Adjusted margins for new size */
-                    }
-                    .cta-button {
-                        font-size: 0.8rem; /* Aggressively reduced for visibility */
-                        padding: 10px 20px; /* Scaled down padding */
-                    }
-                }
                 .hero-title {
                     font-family: var(--font-display);
                     font-size: 3.5rem;
@@ -149,6 +124,33 @@ const HeroSection = () => {
                 .cta-button:hover {
                     transform: translateY(-5px) scale(1.05);
                     box-shadow: 0 0 35px rgba(var(--accent-color-rgb), 0.8), inset 0 0 10px rgba(255,255,255,0.5);
+                }
+
+                /* MOBILE STYLES - MOVED TO THE END FOR CORRECT OVERRIDE */
+                @media (max-width: 768px) {
+                    .hero-section {
+                        height: auto; /* Let content define height */
+                        padding: 6rem 1.5rem 4rem; /* Bumped up container, reduced bottom padding */
+                        box-sizing: border-box;
+                    }
+                    .hero-content {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center; /* This will center all items horizontally */
+                        text-align: center; /* Fallback for text alignment */
+                        max-width: 98%; /* Final adjustment: Widen container */
+                    }
+                    .hero-title {
+                        font-size: 1.2rem; /* Aggressively reduced for visibility */
+                    }
+                    .hero-subtitle {
+                        font-size: 0.8rem; /* Aggressively reduced for visibility */
+                        margin: 1.2rem 0 1.8rem; /* Adjusted margins for new size */
+                    }
+                    .cta-button {
+                        font-size: 0.8rem; /* Aggressively reduced for visibility */
+                        padding: 10px 20px; /* Scaled down padding */
+                    }
                 }
             `}</style>
         </section>
