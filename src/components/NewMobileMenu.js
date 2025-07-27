@@ -42,8 +42,7 @@ const NewMobileMenu = ({ isOpen, onLinkClick, onClose }) => {
                     justify-content: center;
                     padding: 2rem;
                     z-index: 1001;
-                    transform: ${isOpen ? 'translateX(0)' : 'translateX(100%)'};
-                    transition: transform 0.3s ease-in-out;
+                    
                 }
                 .new-menu-link {
                     color: #f0f0f0;
