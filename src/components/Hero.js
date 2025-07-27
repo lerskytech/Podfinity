@@ -89,7 +89,8 @@ const HeroSection = () => {
                         box-sizing: border-box;
                     }
                     .hero-content {
-                        margin: 0 auto; /* Explicitly center the content block */
+                        margin: 0 auto; /* Center the block */
+                        text-align: center; /* Force-center the text inside */
                     }
                     .hero-title {
                         font-size: 2.4rem; /* Scaled for mobile */
