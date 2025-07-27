@@ -6,7 +6,7 @@ const MobileMenu = ({ isOpen, onLinkClick, onClose }) => {
     return (
         <>
             <div className={`mobile-nav-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
-            <nav className={`mobile-nav-links ${isOpen ? 'open' : ''}`}>
+            <nav className={`mobile-nav-links ${isOpen ? 'open' : ''}`} style={{ background: '#0a0a0a' }}>
                 {navLinks.map((link, index) => (
                     <a 
                         key={link}
@@ -41,7 +41,7 @@ const MobileMenu = ({ isOpen, onLinkClick, onClose }) => {
                     right: 0;
                     width: 280px;
                     height: 100%;
-                    background: #0a0a0a;
+                    
                     display: flex;
                     flex-direction: column;
                     align-items: flex-start;
