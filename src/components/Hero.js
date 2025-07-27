@@ -139,6 +139,7 @@ const HeroSection = () => {
                     .hero-content {
                         display: flex;
                         flex-direction: column;
+                        justify-content: center; /* This will center all items vertically */
                         align-items: center; /* This will center all items horizontally */
                         text-align: center; /* Fallback for text alignment */
                         max-width: 98%; /* Final adjustment: Widen container */
