@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import MobileMenu from './MobileMenu';
 
 const Header = () => {
     const [isFlipped, setIsFlipped] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    
 
     const handleNavLinkClick = (e) => {
         e.preventDefault();
@@ -40,21 +41,12 @@ const Header = () => {
                 <a href="#contact" className="nav-link" onClick={handleNavLinkClick}>CONTACT</a>
             </nav>
             <div className="mobile-menu-container">
-                <button className="mobile-menu-icon" onClick={toggleMenu} aria-label="Toggle Menu">
+                <button className="mobile-menu-icon" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle Menu">
                     <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
                     <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
                     <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
                 </button>
-                <div className={`mobile-nav-overlay ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}></div>
-                <nav className={`mobile-nav-links ${isMenuOpen ? 'open' : ''}`}>
-                    <a href="#home" onClick={handleNavLinkClick}>HOME</a>
-                    <a href="#about" onClick={handleNavLinkClick}>ABOUT</a>
-                    <a href="#studios" onClick={handleNavLinkClick}>STUDIOS</a>
-                    <a href="#podcasts" onClick={handleNavLinkClick}>PODCASTS</a>
-                    <a href="#services" onClick={handleNavLinkClick}>SERVICES</a>
-                    <a href="#team" onClick={handleNavLinkClick}>TEAM</a>
-                    <a href="#contact" onClick={handleNavLinkClick} style={{ borderBottom: 'none' }}>CONTACT</a>
-                </nav>
+                <MobileMenu isOpen={isMenuOpen} onLinkClick={handleNavLinkClick} />
             </div>
             <style jsx>{`
                 .header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 2rem; background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(12px); z-index: 1000; border-bottom: 1px solid var(--glass-border); }
@@ -85,48 +77,7 @@ const Header = () => {
                     .bar.open:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
                     .bar.open:nth-child(2) { opacity: 0; }
                     .bar.open:nth-child(3) { top: 50%; transform: translateY(-50%) rotate(-45deg); }
-                    .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; z-index: 998; }
-                    .mobile-nav-overlay.open { opacity: 1; visibility: visible; }
-                    .mobile-nav-links { 
-                        position: fixed; 
-                        top: 0; 
-                        right: 0; 
-                        width: 280px; 
-                        height: 100%; 
-                        background: #0a0a0a; /* Definitive solid background */
-                        display: flex; 
-                        flex-direction: column; 
-                        align-items: flex-start; /* Left-align content */
-                        justify-content: center; 
-                        gap: 0; /* Remove gap, use borders for separation */ 
-                        padding: 2rem; 
-                        z-index: 999; 
-                        transform: translateX(100%); /* Start off-screen */
-                        opacity: 0;
-                        visibility: hidden;
-                        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0.4s; 
-                    }
-                    .mobile-nav-links.open { 
-                        transform: translateX(0); /* Slide in */
-                        opacity: 1;
-                        visibility: visible;
-                    }
-                    .mobile-nav-links a, .mobile-nav-links a:link, .mobile-nav-links a:visited {
-                        font-size: 1.3rem; /* Refined font size */
-                        color: var(--text-color);
-                        text-decoration: none;
-                        font-family: var(--font-display);
-                        font-weight: 700;
-                        padding: 1rem 1.5rem; /* Adjusted padding */
-                        width: 100%;
-                        text-align: left; /* Left-aligned text */
-                        border-bottom: 1px solid var(--glass-border); /* Separator line */
-                        transition: background-color 0.3s, color 0.3s;
-                    }
-                    .mobile-nav-links a:hover, .mobile-nav-links a:active {
-                        background-color: rgba(147, 199, 217, 0.1); /* Subtle accent hover */
-                        color: var(--accent-color);
-                    }
+                    
                 }
             `}</style>
         </header>
