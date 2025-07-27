@@ -83,15 +83,21 @@ const HeroSection = () => {
                     max-width: 90%;
                 }
                 @media (max-width: 768px) {
+                    .hero-section {
+                        height: auto; /* Let content define height */
+                        padding: 10rem 1.5rem; /* Add vertical and horizontal space */
+                        box-sizing: border-box;
+                    }
                     .hero-title {
-                        font-size: 2.2rem; /* Scaled for mobile */
+                        font-size: 2.4rem; /* Scaled for mobile */
                     }
                     .hero-subtitle {
                         font-size: 1.1rem; /* Scaled for mobile */
+                        margin: 1.5rem 0 2rem;
                     }
                     .cta-button {
-                        font-size: 0.9rem; /* Scaled for mobile */
-                        padding: 12px 24px;
+                        font-size: 1rem; /* Scaled for mobile */
+                        padding: 14px 28px;
                     }
                 }
                 .hero-title {
