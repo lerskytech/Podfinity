@@ -47,13 +47,13 @@ const Header = () => {
                 </button>
                 <div className={`mobile-nav-overlay ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}></div>
                 <nav className={`mobile-nav-links ${isMenuOpen ? 'open' : ''}`}>
-                    <a href="#home" onClick={toggleMenu}>HOME</a>
-                    <a href="#about" onClick={toggleMenu}>ABOUT</a>
-                    <a href="#studios" onClick={toggleMenu}>STUDIOS</a>
-                    <a href="#podcasts" onClick={toggleMenu}>PODCASTS</a>
-                    <a href="#services" onClick={toggleMenu}>SERVICES</a>
-                    <a href="#team" onClick={toggleMenu}>TEAM</a>
-                    <a href="#contact" onClick={toggleMenu}>CONTACT</a>
+                    <a href="#home" onClick={handleNavLinkClick}>HOME</a>
+                    <a href="#about" onClick={handleNavLinkClick}>ABOUT</a>
+                    <a href="#studios" onClick={handleNavLinkClick}>STUDIOS</a>
+                    <a href="#podcasts" onClick={handleNavLinkClick}>PODCASTS</a>
+                    <a href="#services" onClick={handleNavLinkClick}>SERVICES</a>
+                    <a href="#team" onClick={handleNavLinkClick}>TEAM</a>
+                    <a href="#contact" onClick={handleNavLinkClick}>CONTACT</a>
                 </nav>
             </div>
             <style jsx>{`
@@ -85,25 +85,47 @@ const Header = () => {
                     .bar.open:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
                     .bar.open:nth-child(2) { opacity: 0; }
                     .bar.open:nth-child(3) { top: 50%; transform: translateY(-50%) rotate(-45deg); }
-                    .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; z-index: 998; }
+                    .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; z-index: 998; }
                     .mobile-nav-overlay.open { opacity: 1; visibility: visible; }
-                    .mobile-nav-links { position: fixed; top: 0; right: -300px; width: 250px; height: 100%; background: #111827 !important; /* Force solid background */ display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1rem; transition: right 0.4s ease-in-out; padding: 2rem; z-index: 999; }
-                    .mobile-nav-links.open { right: 15px; /* Shift left */ }
+                    .mobile-nav-links { 
+                        position: fixed; 
+                        top: 0; 
+                        right: 0; 
+                        width: 280px; 
+                        height: 100%; 
+                        background: #0a0a0a; /* Definitive solid background */
+                        display: flex; 
+                        flex-direction: column; 
+                        align-items: center; /* Center links for a cleaner look */
+                        justify-content: center; 
+                        gap: 1.2rem; 
+                        padding: 2rem; 
+                        z-index: 999; 
+                        transform: translateX(100%); /* Start off-screen */
+                        opacity: 0;
+                        visibility: hidden;
+                        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0.4s; 
+                    }
+                    .mobile-nav-links.open { 
+                        transform: translateX(0); /* Slide in */
+                        opacity: 1;
+                        visibility: visible;
+                    }
                     .mobile-nav-links a, .mobile-nav-links a:link, .mobile-nav-links a:visited {
-                        font-size: 1.4rem;
+                        font-size: 1.5rem; /* Slightly larger for better touch targets */
                         color: var(--text-color);
                         text-decoration: none;
                         font-family: var(--font-display);
                         font-weight: 700;
-                        padding: 0.75rem 1.5rem;
+                        padding: 0.8rem 1.6rem;
                         width: 100%;
-                        text-align: left;
+                        text-align: center; /* Centered text */
                         border-radius: 8px;
                         transition: background-color 0.3s, color 0.3s;
                     }
                     .mobile-nav-links a:hover, .mobile-nav-links a:active {
                         background-color: var(--accent-color);
-                        color: #fff;
+                        color: #0a0a0a; /* Dark text on accent for contrast */
                     }
                 }
             `}</style>
