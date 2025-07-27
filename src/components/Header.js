@@ -44,9 +44,7 @@ const Header = () => {
             </nav>
             <div className="mobile-menu-container">
                 <button className="mobile-menu-icon" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle Menu">
-                    <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
-                    <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
-                    <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
+                    MENU
                 </button>
                 <NewMobileMenu isOpen={isMenuOpen} onLinkClick={handleNavLinkClick} onClose={closeMenu} />
                 
