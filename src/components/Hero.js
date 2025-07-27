@@ -130,7 +130,7 @@ const HeroSection = () => {
                 @media (max-width: 768px) {
                     .hero-section {
                         height: auto; /* Let content define height */
-                        padding: 6rem 1rem 6rem; /* Adjusted padding: more vertical space, stretched sides */
+                        padding: 6rem 1rem; /* Symmetrical vertical padding */
                         box-sizing: border-box;
                     }
                     .hero-content {
