@@ -103,8 +103,8 @@ const HeroSection = () => {
                         margin: 1.5rem 0 2rem; /* Vertical margin only */
                     }
                     .cta-button {
-                        font-size: 1rem; /* Scaled for mobile */
-                        padding: 14px 28px;
+                        font-size: 0.9rem; /* Final button size reduction */
+                        padding: 12px 24px;
                     }
                 }
                 .hero-title {
