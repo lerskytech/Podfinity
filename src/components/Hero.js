@@ -83,11 +83,21 @@ const HeroSection = () => {
                     max-width: 90%;
                 }
                 @media (max-width: 768px) {
-                    .hero-content {
-                        padding-top: 5rem; /* Ensure content is not cut off at the top */
+                    .hero-section {
+                        height: auto;
+                        padding: 12rem 2rem;
+                        box-sizing: border-box;
                     }
                     .hero-title {
-                        font-size: 2.8rem;
+                        font-size: 2.2rem;
+                    }
+                    .hero-subtitle {
+                        font-size: 1rem;
+                        margin: 1.5rem 0 2rem;
+                    }
+                    .cta-button {
+                        font-size: 0.9rem;
+                        padding: 12px 24px;
                     }
                 }
                 .hero-title {
