@@ -129,11 +129,8 @@ const HeroSection = () => {
                 /* MOBILE STYLES - MOVED TO THE END FOR CORRECT OVERRIDE */
                 @media (max-width: 768px) {
                     .hero-section {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        min-height: 100vh; /* Make section full viewport height */
-                        padding: 2rem 1rem; /* Add some padding for safety */
+                        height: auto; /* Let content define height */
+                        padding: 6rem 1rem; /* Symmetrical vertical padding */
                         box-sizing: border-box;
                     }
                     .hero-content {
@@ -141,7 +138,7 @@ const HeroSection = () => {
                         flex-direction: column;
                         align-items: center; /* This will center all items horizontally */
                         text-align: center; /* Fallback for text alignment */
-                        max-width: 95%; /* Ensure content doesn't touch edges */
+                        max-width: 98%; /* Final adjustment: Widen container */
                     }
                     .hero-title {
                         font-size: 1.5rem; /* Enlarged title for better balance */
