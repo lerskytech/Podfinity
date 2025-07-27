@@ -89,15 +89,15 @@ const HeroSection = () => {
                         box-sizing: border-box;
                     }
                     .hero-content {
-                        margin: 0 auto; /* Center the block */
-                        text-align: center; /* Force-center the text inside */
+                        margin: 0 auto !important; /* Force-center the block */
+                        text-align: center !important; /* Force-center the text inside */
                     }
                     .hero-title {
                         font-size: 2.4rem; /* Scaled for mobile */
                     }
                     .hero-subtitle {
                         font-size: 1.1rem; /* Scaled for mobile */
-                        margin: 1.5rem 0 2rem;
+                        margin: 1.5rem auto 2rem; /* Correctly center the subtitle */
                     }
                     .cta-button {
                         font-size: 1rem; /* Scaled for mobile */
