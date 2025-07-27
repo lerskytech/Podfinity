@@ -96,15 +96,15 @@ const HeroSection = () => {
                         max-width: 98%; /* Final adjustment: Widen container */
                     }
                     .hero-title {
-                        font-size: 1.4rem; /* Further reduced for mobile */
+                        font-size: 1.2rem; /* Aggressively reduced for visibility */
                     }
                     .hero-subtitle {
-                        font-size: 0.9rem; /* Further reduced for mobile */
-                        margin: 1.5rem 0 2rem; /* Vertical margin only */
+                        font-size: 0.8rem; /* Aggressively reduced for visibility */
+                        margin: 1.2rem 0 1.8rem; /* Adjusted margins for new size */
                     }
                     .cta-button {
-                        font-size: 0.9rem; /* Final button size reduction */
-                        padding: 12px 24px;
+                        font-size: 0.8rem; /* Aggressively reduced for visibility */
+                        padding: 10px 20px; /* Scaled down padding */
                     }
                 }
                 .hero-title {
