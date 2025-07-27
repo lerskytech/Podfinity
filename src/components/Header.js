@@ -51,7 +51,7 @@ const Header = () => {
                 <MobileMenu isOpen={isMenuOpen} onLinkClick={handleNavLinkClick} onClose={closeMenu} />
             </div>
             <style jsx>{`
-                .header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 2rem; background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(12px); z-index: 1000; border-bottom: 1px solid var(--glass-border); }
+                .header { border: 5px solid red !important; /* DIAGNOSTIC TEST */ position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 2rem; background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(12px); z-index: 1000; border-bottom: 1px solid var(--glass-border); }
                 .logo-container { display: flex; align-items: center; gap: 1rem; }
                 .logo {
                     height: 60px;
