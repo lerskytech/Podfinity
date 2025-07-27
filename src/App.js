@@ -52,9 +52,7 @@ const GlobalStyles = () => (
             background-attachment: fixed; 
         }
         
-        main > section {
-            background: transparent;
-        }
+        
 
         h1, h2, h3, h4 {
             font-family: var(--font-display);
@@ -104,15 +102,15 @@ const App = () => {
             <GlobalStyles />
             <Header />
             <main>
-                <div id="home"><HeroSection /></div>
-                <StatsSection />
-                <div id="about"><AboutSection /></div>
-                <div id="studios"><StudiosSection /></div>
-                <TestimonialCarousel />
-                <div id="podcasts"><Podcasts /></div>
-                <div id="services"><ServicesSection /></div>
-                <div id="team"><TeamSection /></div>
-                <div id="contact"><ContactSection /></div>
+                <section id="home"><HeroSection /></section>
+                <section><StatsSection /></section>
+                <section id="about"><AboutSection /></section>
+                <section id="studios"><StudiosSection /></section>
+                <section><TestimonialCarousel /></section>
+                <section id="podcasts"><Podcasts /></section>
+                <section id="services"><ServicesSection /></section>
+                <section id="team"><TeamSection /></section>
+                <section id="contact"><ContactSection /></section>
             </main>
             <Footer />
         </>
