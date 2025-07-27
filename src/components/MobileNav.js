@@ -1,12 +1,12 @@
 import React from 'react';
 
-const MobileMenu = ({ isOpen, onLinkClick, onClose }) => {
+const MobileNav = ({ isOpen, onLinkClick, onClose }) => {
     const navLinks = ['HOME', 'ABOUT', 'STUDIOS', 'PODCASTS', 'SERVICES', 'TEAM', 'CONTACT'];
 
     return (
         <>
-            <div className={`mobile-nav-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
-            <nav className={`mobile-nav-links ${isOpen ? 'open' : ''}`} style={{ background: '#0a0a0a' }}>
+            <div className={`mobile-nav-v2-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
+            <nav className={`mobile-nav-v2-links ${isOpen ? 'open' : ''}`} style={{ background: '#0a0a0a' }}>
                 {navLinks.map((link, index) => (
                     <a 
                         key={link}
@@ -19,7 +19,7 @@ const MobileMenu = ({ isOpen, onLinkClick, onClose }) => {
                 ))}
             </nav>
             <style jsx>{`
-                .mobile-nav-overlay {
+                .mobile-nav-v2-overlay {
                     position: fixed;
                     top: 0;
                     left: 0;
@@ -31,11 +31,11 @@ const MobileMenu = ({ isOpen, onLinkClick, onClose }) => {
                     transition: opacity 0.4s ease, visibility 0.4s ease;
                     z-index: 998;
                 }
-                .mobile-nav-overlay.open {
+                .mobile-nav-v2-overlay.open {
                     opacity: 1;
                     visibility: visible;
                 }
-                .mobile-nav-links {
+                .mobile-nav-v2-links {
                     position: fixed;
                     top: 0;
                     right: 0;
@@ -54,12 +54,12 @@ const MobileMenu = ({ isOpen, onLinkClick, onClose }) => {
                     visibility: hidden;
                     transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out, visibility 0.4s;
                 }
-                .mobile-nav-links.open {
+                .mobile-nav-v2-links.open {
                     transform: translateX(0);
                     opacity: 1;
                     visibility: visible;
                 }
-                .mobile-nav-links a {
+                .mobile-nav-v2-links a {
                     font-size: 1.3rem;
                     color: var(--text-color);
                     text-decoration: none;
@@ -70,7 +70,7 @@ const MobileMenu = ({ isOpen, onLinkClick, onClose }) => {
                     text-align: left;
                     transition: background-color 0.3s, color 0.3s;
                 }
-                .mobile-nav-links a:hover, .mobile-nav-links a:active {
+                .mobile-nav-v2-links a:hover, .mobile-nav-v2-links a:active {
                     background-color: rgba(147, 199, 217, 0.1);
                     color: var(--accent-color);
                 }
@@ -79,4 +79,4 @@ const MobileMenu = ({ isOpen, onLinkClick, onClose }) => {
     );
 };
 
-export default MobileMenu;
+export default MobileNav;
