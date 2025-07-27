@@ -7,7 +7,7 @@ const Header = () => {
 
     
 
-    const closeMenu = () => setIsMenuOpen(false);
+    
 
     const handleNavLinkClick = (e) => {
         e.preventDefault();
