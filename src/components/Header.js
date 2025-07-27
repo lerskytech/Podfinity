@@ -47,13 +47,13 @@ const Header = () => {
                 </button>
                 <div className={`mobile-nav-overlay ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}></div>
                 <nav className={`mobile-nav-links ${isMenuOpen ? 'open' : ''}`}>
-                    <a href="#home" onClick={handleNavLinkClick}>HOME</a>
-                    <a href="#about" onClick={handleNavLinkClick}>ABOUT</a>
-                    <a href="#studios" onClick={handleNavLinkClick}>STUDIOS</a>
-                    <a href="#podcasts" onClick={handleNavLinkClick}>PODCASTS</a>
-                    <a href="#services" onClick={handleNavLinkClick}>SERVICES</a>
-                    <a href="#team" onClick={handleNavLinkClick}>TEAM</a>
-                    <a href="#contact" onClick={handleNavLinkClick}>CONTACT</a>
+                    <a href="#home" onClick={toggleMenu}>HOME</a>
+                    <a href="#about" onClick={toggleMenu}>ABOUT</a>
+                    <a href="#studios" onClick={toggleMenu}>STUDIOS</a>
+                    <a href="#podcasts" onClick={toggleMenu}>PODCASTS</a>
+                    <a href="#services" onClick={toggleMenu}>SERVICES</a>
+                    <a href="#team" onClick={toggleMenu}>TEAM</a>
+                    <a href="#contact" onClick={toggleMenu}>CONTACT</a>
                 </nav>
             </div>
             <style jsx>{`
@@ -87,7 +87,7 @@ const Header = () => {
                     .bar.open:nth-child(3) { top: 50%; transform: translateY(-50%) rotate(-45deg); }
                     .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; z-index: 998; }
                     .mobile-nav-overlay.open { opacity: 1; visibility: visible; }
-                    .mobile-nav-links { position: fixed; top: 0; right: -300px; width: 250px; height: 100%; background: var(--secondary-color); /* Solid background */ display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1rem; transition: right 0.4s ease-in-out; padding: 2rem; z-index: 999; }
+                    .mobile-nav-links { position: fixed; top: 0; right: -300px; width: 250px; height: 100%; background: #111827; /* Solid, non-transparent background */ display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1rem; transition: right 0.4s ease-in-out; padding: 2rem; z-index: 999; }
                     .mobile-nav-links.open { right: 15px; /* Shift left */ }
                     .mobile-nav-links a, .mobile-nav-links a:link, .mobile-nav-links a:visited {
                         font-size: 1.4rem;
