@@ -12,7 +12,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(10, 25, 47, 0.98);
+            background-color: #0A192F; /* Solid, opaque background */
             z-index: 1000;
             display: flex;
             flex-direction: column;
@@ -20,7 +20,6 @@ const MobileMenu = ({ isOpen, onClose }) => {
             justify-content: center;
             transition: opacity 0.3s ease-in-out;
             opacity: ${isOpen ? '1' : '0'};
-            backdrop-filter: blur(10px);
         }
         .close-button {
             position: absolute;
