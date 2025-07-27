@@ -139,7 +139,7 @@ const HeroSection = () => {
                         align-items: center; /* This will center all items horizontally */
                         text-align: center; /* Fallback for text alignment */
                         max-width: 98%; /* Final adjustment: Widen container */
-                        padding: 3rem 1rem; /* Stretch the container vertically */
+                        padding: 4rem 1rem; /* Slightly increase vertical stretch */
                     }
                     .hero-title {
                         font-size: 1.5rem; /* Enlarged title for better balance */
