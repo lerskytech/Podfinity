@@ -96,7 +96,7 @@ const HeroSection = () => {
                         max-width: 98%; /* Final adjustment: Widen container */
                     }
                     .hero-title {
-                        font-size: 2.4rem; /* Scaled for mobile */
+                        font-size: 2.2rem; /* Scaled for mobile */
                     }
                     .hero-subtitle {
                         font-size: 1.1rem; /* Scaled for mobile */
@@ -109,7 +109,7 @@ const HeroSection = () => {
                 }
                 .hero-title {
                     font-family: var(--font-display);
-                    font-size: 4.5rem;
+                    font-size: 4.2rem;
                     font-weight: 700;
                     color: #fff;
                     text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
