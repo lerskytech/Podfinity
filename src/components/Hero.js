@@ -85,7 +85,7 @@ const HeroSection = () => {
                 @media (max-width: 768px) {
                     .hero-section {
                         height: auto; /* Let content define height */
-                        padding: 10rem 1.5rem; /* Add vertical and horizontal space */
+                        padding: 8rem 1.5rem; /* Subtle: Reduce vertical space */
                         box-sizing: border-box;
                     }
                     .hero-content {
@@ -93,6 +93,7 @@ const HeroSection = () => {
                         flex-direction: column;
                         align-items: center; /* This will center all items horizontally */
                         text-align: center; /* Fallback for text alignment */
+                        max-width: 95%; /* Subtle: Widen the container */
                     }
                     .hero-title {
                         font-size: 2.4rem; /* Scaled for mobile */
