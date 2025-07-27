@@ -85,7 +85,7 @@ const HeroSection = () => {
                 @media (max-width: 768px) {
                     .hero-section {
                         height: auto; /* Let content define height */
-                        padding: 8rem 1.5rem; /* Subtle: Reduce vertical space */
+                        padding: 6rem 1.5rem 4rem; /* Bumped up container, reduced bottom padding */
                         box-sizing: border-box;
                     }
                     .hero-content {
@@ -96,10 +96,10 @@ const HeroSection = () => {
                         max-width: 98%; /* Final adjustment: Widen container */
                     }
                     .hero-title {
-                        font-size: 1.8rem; /* Final font size reduction */
+                        font-size: 1.6rem; /* Made smaller for mobile */
                     }
                     .hero-subtitle {
-                        font-size: 1.1rem; /* Scaled for mobile */
+                        font-size: 1rem; /* Made smaller for mobile */
                         margin: 1.5rem 0 2rem; /* Vertical margin only */
                     }
                     .cta-button {
