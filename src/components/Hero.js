@@ -130,7 +130,7 @@ const HeroSection = () => {
                 @media (max-width: 768px) {
                     .hero-section {
                         height: auto; /* Let content define height */
-                        padding: 6rem 1.5rem 4rem; /* Bumped up container, reduced bottom padding */
+                        padding: 6rem 1rem 6rem; /* Adjusted padding: more vertical space, stretched sides */
                         box-sizing: border-box;
                     }
                     .hero-content {
@@ -141,7 +141,7 @@ const HeroSection = () => {
                         max-width: 98%; /* Final adjustment: Widen container */
                     }
                     .hero-title {
-                        font-size: 1.2rem; /* Aggressively reduced for visibility */
+                        font-size: 1.5rem; /* Enlarged title for better balance */
                     }
                     .hero-subtitle {
                         font-size: 0.8rem; /* Aggressively reduced for visibility */
