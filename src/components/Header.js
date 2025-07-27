@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FinalMobileMenu from './FinalMobileMenu';
+
 
 const Header = () => {
     const [isFlipped, setIsFlipped] = useState(false);
@@ -48,7 +48,7 @@ const Header = () => {
                     <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
                     <div className={`bar ${isMenuOpen ? 'open' : ''}`}></div>
                 </button>
-                <FinalMobileMenu isOpen={isMenuOpen} onLinkClick={handleNavLinkClick} onClose={closeMenu} />
+                
                 
             </div>
             <style jsx>{`
