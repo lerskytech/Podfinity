@@ -82,6 +82,14 @@ const HeroSection = () => {
                     border: 1px solid var(--glass-border);
                     max-width: 90%;
                 }
+                @media (max-width: 768px) {
+                    .hero-content {
+                        padding-top: 5rem; /* Ensure content is not cut off at the top */
+                    }
+                    .hero-title {
+                        font-size: 2.8rem;
+                    }
+                }
                 .hero-title {
                     font-family: var(--font-display);
                     font-size: 4.5rem;
